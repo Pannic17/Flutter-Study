@@ -16,7 +16,7 @@ class listApp extends StatelessWidget {
           backgroundColor: Color(0xFF1d1d1d),
           textTheme: TextTheme(
             bodyText1: TextStyle(color: Color(0xFFFFFFFF)),
-            bodyText2: TextStyle(color: Color(0xFFFFFFFF), fontSize: 27.w),
+            bodyText2: TextStyle(color: Color(0xFFFFFFFF)),
           )
       ),
     );
@@ -158,7 +158,7 @@ class ItemText extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Text>[
               Text("￥"+price.toString(), style: TextStyle(fontSize: 27.w, fontWeight: FontWeight.bold)),
-              Text(avlAmount.toString()+"/"+totalAmount.toString(), style: TextStyle(fontSize: 27.w, height: 36/27))
+              Text(avlAmount.toString()+"/"+totalAmount.toString(), style: TextStyle(fontSize: 27.w))
             ],
           )
         ]
