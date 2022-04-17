@@ -150,7 +150,7 @@ class ItemText extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(name, textAlign: TextAlign.left, style: TextStyle(fontSize: 27.w)),
-                Text(number, textAlign: TextAlign.left),
+                Text(number, textAlign: TextAlign.left, style: TextStyle(fontSize: 27.w)),
               ],
             ),
           ),

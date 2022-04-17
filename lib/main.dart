@@ -1,14 +1,25 @@
 // ignore_for_file: prefer_const_constructors, camel_case_types, prefer_const_literals_to_create_immutables, avoid_print, no_logic_in_create_state
 
 
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
-main() => runApp(listApp());
+void main() async {
+  if (Platform.isAndroid) {
+    SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+  };
+  runApp(const SingleApp());
+}
 
-class listApp extends StatelessWidget {
-  const listApp({Key? key}) : super(key: key);
+class SingleApp extends StatelessWidget {
+  const SingleApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,27 +52,63 @@ class homePage extends StatelessWidget {
         orientation: Orientation.portrait
     );
     return Scaffold(
-      appBar: AppBar(
-        title: Text("List"),
-      ),
       body: Container(
         decoration: BoxDecoration(color: Color(0xFF1d1d1d)),
-        padding: EdgeInsets.symmetric(
-          horizontal: 27.w
-        ),
-        child: homeContent(likeState: true, collectState: false, likeCount: 9, collectCount: 6),
+        child: homeContent(),
       ),
     );
   }
 }
 
 class homeContent extends StatefulWidget {
+
+  const homeContent({
+    Key? key
+  }) : super(key: key);
+
+  @override
+  State<homeContent> createState() => _homeContentState();
+}
+
+class _homeContentState extends State<homeContent> {
+  final swiperUrl = [
+    "https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s1.png",
+    "https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s2.png",
+    "https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s3.png"
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(0),
+      child:
+        Stack(
+          fit: StackFit.loose,
+          clipBehavior: Clip.none,
+          children: [
+            SingleSwiper(swiperUrl: swiperUrl),
+            Container(
+              margin: EdgeInsets.only(top: 900.w),
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: SinglePanel(),
+                ),
+              ),
+            )
+          ],
+        ),
+    );
+  }
+}
+
+class SingleButtonSet extends StatefulWidget {
   final bool likeState;
   final bool collectState;
   final int likeCount;
   final int collectCount;
 
-  const homeContent({
+  const SingleButtonSet({
     Key? key,
     required this.likeState,
     required this.collectState,
@@ -70,10 +117,10 @@ class homeContent extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<homeContent> createState() => _homeContentState();
+  State<SingleButtonSet> createState() => _SingleButtonSetState();
 }
 
-class _homeContentState extends State<homeContent> {
+class _SingleButtonSetState extends State<SingleButtonSet> {
   int likeCount = 0;
   int collectCount = 0;
   bool likeState = true;
@@ -95,45 +142,43 @@ class _homeContentState extends State<homeContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        children: [
-          SingleCountButton(
-            state: likeState,
-            count: likeCount,
-            trueIcon: likeButtonTrue,
-            falseIcon: likeButtonFalse,
-            longPress: (state) {
-              setState(() {
-                likeState = true;
-                collectState = true;
-              });
-            },
-            pressButton: (state) {
-              setState(() {
-                likeState = state;
-              });
-            },
-          ),
-          SingleCountButton(
-            state: collectState,
-            count: collectCount,
-            trueIcon: collectButtonTrue,
-            falseIcon: collectButtonFalse,
-            longPress: (state) {
-              setState(() {
-                likeState = true;
-                collectState = true;
-              });
-            },
-            pressButton: (state) {
-              setState(() {
-                collectState = state;
-              });
-            },
-          )
-        ],
-      ),
+    return Row(
+      children: [
+        SingleCountButton(
+          state: likeState,
+          count: likeCount,
+          trueIcon: likeButtonTrue,
+          falseIcon: likeButtonFalse,
+          longPress: (state) {
+            setState(() {
+              likeState = true;
+              collectState = true;
+            });
+          },
+          pressButton: (state) {
+            setState(() {
+              likeState = state;
+            });
+          },
+        ),
+        SingleCountButton(
+          state: collectState,
+          count: collectCount,
+          trueIcon: collectButtonTrue,
+          falseIcon: collectButtonFalse,
+          longPress: (state) {
+            setState(() {
+              likeState = true;
+              collectState = true;
+            });
+          },
+          pressButton: (state) {
+            setState(() {
+              collectState = state;
+            });
+          },
+        )
+      ],
     );
   }
 }
@@ -210,7 +255,6 @@ class _SingleCountButtonState extends State<SingleCountButton> {
         },
         onLongPress: () {
           widget.longPress(true);
-          print(widget.state.toString());
         },
         child: Column(
           children: [
@@ -223,5 +267,76 @@ class _SingleCountButtonState extends State<SingleCountButton> {
   }
 }
 
+class HomeSwiperSet extends StatefulWidget {
+  const HomeSwiperSet({Key? key}) : super(key: key);
 
+  @override
+  State<HomeSwiperSet> createState() => _HomeSwiperSetState();
+}
+
+class _HomeSwiperSetState extends State<HomeSwiperSet> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class SingleSwiper extends StatelessWidget {
+  final List<String> swiperUrl;
+
+  const SingleSwiper({
+    Key? key,
+    required this.swiperUrl
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 750.w,
+      height: 1000.w,
+      child: Swiper(
+        itemCount: swiperUrl.length,
+        autoplay: true,
+        autoplayDelay: 2000,
+        itemBuilder: (BuildContext context, int index) {
+          return Stack(
+            children: [
+              Image.network(swiperUrl[index], fit: BoxFit.fitWidth),
+              Container(
+                width: 750.w,
+                height: 1000.w,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.84, 0.9, 0.98],
+                      colors: [Color(0x00000000), Color(0x661d1d1d), Color(0xFF1d1d1d)],
+                    )
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class SinglePanel extends StatelessWidget {
+  const SinglePanel({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 15.w),
+      decoration: BoxDecoration(
+        border: Border.all(width: 1, color: Color(0xFF353535)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(5)),
+        color: Color(0x991d1d1d),
+
+      ),
+      child: SizedBox(height: 8000.w, width: 720.w),
+    );
+  }
+}
 
