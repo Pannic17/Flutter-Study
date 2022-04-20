@@ -60,10 +60,18 @@ class homePage extends StatelessWidget {
             children: [
               KaiwuSearchBar(),
               KaiwuSorterMulti(
-                tags: ["1", "2", "3"],
+                tags: ["手办", "雕像", "3D插画"],
                 onSelect: (list) => {},
                 height: 48.w,
-                margin: EdgeInsets.symmetric(horizontal: 12.w),
+                margin: EdgeInsets.symmetric(horizontal: 24.w),
+                padding: EdgeInsets.symmetric(horizontal: 12.w)
+              ),
+              KaiwuSorterRadio(
+                tags: ["已售罄", "热销中"],
+                onSelect: (list) => {},
+                height: 48.w,
+                specific: true,
+                margin: EdgeInsets.symmetric(horizontal: 24.w),
                 padding: EdgeInsets.symmetric(horizontal: 12.w)
               )
             ],
@@ -156,12 +164,20 @@ class _KaiwuSorterMenuState extends State<KaiwuSorterMenu> {
     return Column(
       children: [
         KaiwuSorterMulti(
-            tags: ["1", "2", "3"],
+          tags: ["1", "2", "3"],
+          onSelect: (list) => {},
+          height: 48.w,
+          margin: EdgeInsets.symmetric(horizontal: 12.w),
+          padding: EdgeInsets.symmetric(horizontal: 12.w)
+        ),
+        KaiwuSorterRadio(
+            tags: ["1", "2"],
             onSelect: (list) => {},
             height: 48.w,
+            specific: true,
             margin: EdgeInsets.symmetric(horizontal: 12.w),
             padding: EdgeInsets.symmetric(horizontal: 12.w)
-        ),
+        )
       ],
     );
   }
@@ -207,55 +223,55 @@ class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
   Widget build(BuildContext context) {
     _tagList = [];
     _tagList.add(
-        KaiwuSorterItem(
-            tag: "全部",
-            index: 0,
-            selected: _selectStatus[0],
-            height: widget.height,
-            margin: widget.margin,
-            padding: widget.padding,
-            onSelect: (selected) {
-              if (_selectedList.isNotEmpty && selected["selected"]) {
-                for (int index in _selectedList) {
-                  _selectStatus[index] = false;
-                }
-                _selectedList = [];
-                _selectStatus[0] = true;
-              }
-              widget.onSelect(_selectedList);
-              setState(() {
-                print("0#$_selectedList");
-              });
+      KaiwuSorterItem(
+        tag: "全部",
+        index: 0,
+        selected: _selectStatus[0],
+        height: widget.height,
+        margin: widget.margin,
+        padding: widget.padding,
+        onSelect: (selected) {
+          if (_selectedList.isNotEmpty && selected["selected"]) {
+            for (int index in _selectedList) {
+              _selectStatus[index] = false;
             }
-        )
+            _selectedList = [];
+            _selectStatus[0] = true;
+          }
+          widget.onSelect(_selectedList);
+          setState(() {
+            print("0#$_selectedList");
+          });
+        }
+      )
     );
     int count = 0;
     for (String tag in widget.tags) {
       count += 1;
       _tagList.add(KaiwuSorterItem(
-          tag: tag,
-          index: count,
-          selected: _selectStatus[count],
-          height: widget.height,
-          margin: widget.margin,
-          padding: widget.padding,
-          onSelect: (item) {
-            if (item["selected"]) {
-              _selectedList.add(item["index"]);
-              _selectStatus[0] = false;
-              _selectStatus[item["index"]] = true;
-            } else {
-              _selectedList.remove(item["index"]);
-              if (_selectedList.isEmpty) {
-                _selectStatus[0] = true;
-              }
-              _selectStatus[item["index"]] = false;
+        tag: tag,
+        index: count,
+        selected: _selectStatus[count],
+        height: widget.height,
+        margin: widget.margin,
+        padding: widget.padding,
+        onSelect: (item) {
+          if (item["selected"]) {
+            _selectedList.add(item["index"]);
+            _selectStatus[0] = false;
+            _selectStatus[item["index"]] = true;
+          } else {
+            _selectedList.remove(item["index"]);
+            if (_selectedList.isEmpty) {
+              _selectStatus[0] = true;
             }
-            widget.onSelect(_selectedList);
-            setState(() {
-              print(item["index"].toString()+"#"+_selectedList.toString());
-            });
+            _selectStatus[item["index"]] = false;
           }
+          widget.onSelect(_selectedList);
+          setState(() {
+            print(item["index"].toString()+"#"+_selectedList.toString());
+          });
+        }
       ));
     }
     return Container(
@@ -269,16 +285,109 @@ class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
 }
 
 class KaiwuSorterRadio extends StatefulWidget {
-  const KaiwuSorterRadio({Key? key}) : super(key: key);
+  /**
+   * !!! Set specific as true when /sort api didn't change, all and selling will be reverse when sending request
+   */
+  final List<String> tags;
+  final ValueChanged<int> onSelect;
+  final double height;
+  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry padding;
+  final bool specific;
+  const KaiwuSorterRadio({
+    Key? key,
+    required this.tags,
+    required this.onSelect,
+    this.height = 45,
+    this.margin = const EdgeInsets.symmetric(horizontal: 12),
+    this.padding = const EdgeInsets.symmetric(horizontal: 12),
+    this.specific = false
+  }) : super(key: key);
 
   @override
   State<KaiwuSorterRadio> createState() => _KaiwuSorterRadioState();
 }
 
 class _KaiwuSorterRadioState extends State<KaiwuSorterRadio> {
+  int _selected = 2;
+
+  /**
+   * 0: Selling
+   * 1: Sold
+   * 2: All
+   * 3: Pre-sale
+   */
+  final List<bool> _selectStatus = [];
+  final List<int> _selectEnum = [2, 1, 0, 3];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selectStatus.add(true);
+    for (int index = 0; index < widget.tags.length; index++) {
+      _selectStatus.add(false);
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    List<KaiwuSorterItem> _tagList = [];
+    _tagList.add(
+      KaiwuSorterItem(
+        tag: "全部",
+        index: widget.specific ? 2 : 0,
+        selected: _selectStatus[0],
+        height: widget.height,
+        margin: widget.margin,
+        padding: widget.padding,
+        onSelect: (selectMap) {
+          if (widget.specific) {
+            _selectStatus[_selectEnum.indexOf(_selected)] = false;
+          } else {
+            _selectStatus[_selected] = false;
+          }
+          _selected = widget.specific ? _selectEnum[0] : 0;
+          _selectStatus[0] = true;
+          widget.onSelect(_selected);
+          setState(() {
+            print("0#$_selected");
+          });
+        },
+      )
+    );
+    int count = 0;
+    for (String tag in widget.tags) {
+      count += 1;
+      _tagList.add(KaiwuSorterItem(
+        tag: tag,
+        index: count,
+        selected: _selectStatus[count],
+        height: widget.height,
+        margin: widget.margin,
+        padding: widget.padding,
+        onSelect: (selectMap) {
+          for (int index = 0; index < _selectStatus.length; index++) {
+            _selectStatus[index] = false;
+          }
+          _selected = widget.specific ? _selectEnum[selectMap["index"]] : selectMap["index"];
+          _selectStatus[selectMap["index"]] = true;
+          widget.onSelect(_selected);
+          setState(() {
+            print("${selectMap["index"]}#$_selected");
+          });
+        }
+      ));
+    }
+
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 12.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: _tagList,
+      ),
+    );
   }
 }
 
