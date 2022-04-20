@@ -203,10 +203,8 @@ class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    int count = 0;
     _selectStatus.add(true);
-    for (String tag in widget.tags) {
-      count += 1;
+    for (int index = 0; index < widget.tags.length; index++) {
       _selectStatus.add(false);
     }
   }
