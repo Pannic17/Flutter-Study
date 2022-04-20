@@ -14,7 +14,7 @@ void main() async {
   if (Platform.isAndroid) {
     SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-  };
+  }
   runApp(const SingleApp());
 }
 
@@ -206,8 +206,8 @@ class SingleCountButton extends StatefulWidget {
 }
 
 class _SingleCountButtonState extends State<SingleCountButton> {
-  int count = 0;
-  Icon button = Icon(Icons.star);
+  int _count = 0;
+  late Icon _button;
   final Icon trueIcon;
   final Icon falseIcon;
 
@@ -216,8 +216,8 @@ class _SingleCountButtonState extends State<SingleCountButton> {
   @override
   void initState() {
     super.initState();
-    count = widget.count;
-    button = widget.state ? trueIcon : falseIcon;
+    _count = widget.count;
+    _button = widget.state ? trueIcon : falseIcon;
   }
 
   @override
@@ -225,11 +225,11 @@ class _SingleCountButtonState extends State<SingleCountButton> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.state != widget.state) {
       if (widget.state) {
-        count++;
-        button = trueIcon;
+        _count++;
+        _button = trueIcon;
       } else {
-        count--;
-        button = falseIcon;
+        _count--;
+        _button = falseIcon;
       }
     }
   }
@@ -249,8 +249,8 @@ class _SingleCountButtonState extends State<SingleCountButton> {
         },
         child: Column(
           children: [
-            button,
-            Text(count.toString(), style: TextStyle(fontSize: 21.sp, color: Color(0xFF9E9E9E)))
+            _button,
+            Text(_count.toString(), style: TextStyle(fontSize: 21.sp, color: Color(0xFF9E9E9E)))
           ],
         ),
       ),

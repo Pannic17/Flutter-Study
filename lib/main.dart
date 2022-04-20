@@ -2,19 +2,16 @@
 
 
 import 'dart:io';
-import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 
 void main() async {
   if (Platform.isAndroid) {
     SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-  };
+  }
   runApp(const SingleApp());
 }
 
@@ -65,7 +62,7 @@ class homePage extends StatelessWidget {
               KaiwuSorterMulti(
                 tags: ["1", "2", "3"],
                 onSelect: (list) => {},
-                height: 45.w,
+                height: 48.w,
                 margin: EdgeInsets.symmetric(horizontal: 12.w),
                 padding: EdgeInsets.symmetric(horizontal: 12.w)
               )
@@ -158,16 +155,13 @@ class _KaiwuSorterMenuState extends State<KaiwuSorterMenu> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row( // Row of artwork types, multi-selectable
-          children: [
-            
-          ],
+        KaiwuSorterMulti(
+            tags: ["1", "2", "3"],
+            onSelect: (list) => {},
+            height: 48.w,
+            margin: EdgeInsets.symmetric(horizontal: 12.w),
+            padding: EdgeInsets.symmetric(horizontal: 12.w)
         ),
-        Row( // Row of sale status, single-select
-          children: [
-
-          ],
-        )
       ],
     );
   }
@@ -197,7 +191,7 @@ class KaiwuSorterMulti extends StatefulWidget {
 class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
   List<int> _selectedList = [];
   final List<bool> _selectStatus = [];
-  List<KaiwuSorterItem> tagList = [];
+  List<KaiwuSorterItem> _tagList = [];
 
   @override
   void initState() {
@@ -211,8 +205,8 @@ class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
 
   @override
   Widget build(BuildContext context) {
-    tagList = [];
-    tagList.add(
+    _tagList = [];
+    _tagList.add(
         KaiwuSorterItem(
             tag: "全部",
             index: 0,
@@ -230,7 +224,7 @@ class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
               }
               widget.onSelect(_selectedList);
               setState(() {
-                print(_selectedList);
+                print("0#$_selectedList");
               });
             }
         )
@@ -238,7 +232,7 @@ class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
     int count = 0;
     for (String tag in widget.tags) {
       count += 1;
-      tagList.add(KaiwuSorterItem(
+      _tagList.add(KaiwuSorterItem(
           tag: tag,
           index: count,
           selected: _selectStatus[count],
@@ -251,8 +245,8 @@ class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
               _selectStatus[0] = false;
               _selectStatus[item["index"]] = true;
             } else {
-              _selectedList.remove(count);
-              if (tagList.isEmpty) {
+              _selectedList.remove(item["index"]);
+              if (_selectedList.isEmpty) {
                 _selectStatus[0] = true;
               }
               _selectStatus[item["index"]] = false;
@@ -265,9 +259,10 @@ class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
       ));
     }
     return Container(
+      padding: EdgeInsets.symmetric(vertical: 12.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: tagList,
+        children: _tagList,
       ),
     );
   }
@@ -354,7 +349,7 @@ class _KaiwuSorterItemState extends State<KaiwuSorterItem> {
       onTap: () {
         Map selectedItem = {"selected": !widget.selected, "index": widget.index};
         widget.onSelect(selectedItem);
-        print(widget.index);
+        print("CLICK #${widget.index}");
       },
       child: Container(
         height: widget.height,
