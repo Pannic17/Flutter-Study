@@ -96,7 +96,7 @@ class _SingleDetailState extends State<SingleDetail> {
             ],
           ),
         ),
-        FooterFlat(buttonLeft: buttonLeft, buttonRight: buttonRight)
+        KaiwuFooter(buttonLeft: buttonLeft, buttonRight: buttonRight)
       ],
     );
   }
@@ -149,13 +149,13 @@ class _SingleButtonSetState extends State<SingleButtonSet> {
           count: likeCount,
           trueIcon: likeButtonTrue,
           falseIcon: likeButtonFalse,
-          longPress: (state) {
+          onLongPress: (state) {
             setState(() {
               likeState = true;
               collectState = true;
             });
           },
-          pressButton: (state) {
+          onClick: (state) {
             setState(() {
               likeState = state;
             });
@@ -166,13 +166,13 @@ class _SingleButtonSetState extends State<SingleButtonSet> {
           count: collectCount,
           trueIcon: collectButtonTrue,
           falseIcon: collectButtonFalse,
-          longPress: (state) {
+          onLongPress: (state) {
             setState(() {
               likeState = true;
               collectState = true;
             });
           },
-          pressButton: (state) {
+          onClick: (state) {
             setState(() {
               collectState = state;
             });
@@ -188,8 +188,8 @@ class SingleCountButton extends StatefulWidget {
   final Icon falseIcon;
   final bool state;
   final int count;
-  final ValueChanged<bool> longPress;
-  final ValueChanged<bool> pressButton;
+  final ValueChanged<bool> onClick;
+  final ValueChanged<bool> onLongPress;
 
   const SingleCountButton({
     Key? key,
@@ -197,8 +197,8 @@ class SingleCountButton extends StatefulWidget {
     required this.count,
     required this.trueIcon,
     required this.falseIcon,
-    required this.longPress,
-    required this.pressButton
+    required this.onClick,
+    required this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -242,15 +242,15 @@ class _SingleCountButtonState extends State<SingleCountButton> {
       child: TextButton(
         style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero)),
         onPressed: () {
-          widget.pressButton(!widget.state);
+          widget.onClick(!widget.state);
         },
         onLongPress: () {
-          widget.longPress(true);
+          widget.onLongPress(true);
         },
         child: Column(
           children: [
             button,
-            Text(count.toString(), style: TextStyle(fontSize: 21.sp, color: Color(0xFF616161)))
+            Text(count.toString(), style: TextStyle(fontSize: 21.sp, color: Color(0xFF9E9E9E)))
           ],
         ),
       ),
@@ -347,11 +347,11 @@ class _SingleInfoState extends State<SingleInfo> {
         children: [
           SingleInfoMain(artworkName: "赤子", price: 598),
           SingleHorizontalLine(),
-          SingleInfoIntro(introduction: intro),
-          SingleHorizontalLine(),
           SingleInfoNumber(artworkNumber: "KW00101", soldAmount: 2, totalAmount: 9),
           SingleHorizontalLine(),
-          SingleInfoArtist(),
+          SingleInfoIntro(introduction: intro),
+          SingleHorizontalLine(),
+          SingleInfoCreator(),
           SingleHorizontalLine(),
           SingleInfoDisplay(imageUrl: displayUrl),
           SingleInfoList(),
@@ -463,7 +463,7 @@ class SingleInfoNumber extends StatelessWidget {
           width: 288.w,
           child: Column(
             children: [
-              Text("作品数量", style: TextStyle(fontSize: 21.w, color: Color(0xFF616161))),
+              Text("作品数量", style: TextStyle(fontSize: 21.w, color: Color(0xFF9E9E9E))),
               Text(avlAmount.toString()+"/"+totalAmount.toString(), style: TextStyle(fontSize: 32.w))
             ],
           ),
@@ -477,7 +477,7 @@ class SingleInfoNumber extends StatelessWidget {
           width: 280.w,
           child: Column(
             children: [
-              Text("作品编号", style: TextStyle(fontSize: 21.w, color: Color(0xFF616161))),
+              Text("作品编号", style: TextStyle(fontSize: 21.w, color: Color(0xFF9E9E9E))),
               Text(artworkNumber, style: TextStyle(fontSize: 32.w))
             ],
           ),
@@ -487,13 +487,13 @@ class SingleInfoNumber extends StatelessWidget {
   }
 }
 
-class SingleInfoArtist extends StatelessWidget {
+class SingleInfoCreator extends StatelessWidget {
   final String artistAvatar;
   final String seriesCover;
   final String artist;
   final String series;
 
-  const SingleInfoArtist({
+  const SingleInfoCreator({
     Key? key,
     this.artistAvatar = "https://test-1308399957.cos.ap-shanghai.myqcloud.com/test_image/test2.png",
     this.seriesCover = "https://kaiwu-1308399957.cos.ap-nanjing.myqcloud.com/series/KW001/cover.jpg",
@@ -524,7 +524,7 @@ class SingleInfoArtist extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("艺术家", style: TextStyle(fontSize: 21.w, color: Color(0xFF616161))),
+                  Text("艺术家", style: TextStyle(fontSize: 21.w, color: Color(0xFF9E9E9E))),
                   Text("JICHU", style: TextStyle(fontSize: 27.w))
                 ],
               )
@@ -537,7 +537,7 @@ class SingleInfoArtist extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text("所属系列", style: TextStyle(fontSize: 21.w, color: Color(0xFF616161)), textDirection: TextDirection.rtl),
+                  Text("所属系列", style: TextStyle(fontSize: 21.w, color: Color(0xFF9E9E9E)), textDirection: TextDirection.rtl),
                   Text("桃花源", style: TextStyle(fontSize: 27.w), textDirection: TextDirection.rtl)
                 ],
               ),
@@ -587,6 +587,7 @@ class SingleInfoArtist extends StatelessWidget {
  */
 
 class SingleInfoDisplay extends StatelessWidget {
+  // image display division
   final List<String> imageUrl;
 
   const SingleInfoDisplay({
@@ -601,7 +602,6 @@ class SingleInfoDisplay extends StatelessWidget {
       SizedBox(height: 24.w)
     ];
     for (String url in imageUrl) {
-      //FadeInImage.assetNetwork(placeholder: "", image: url, fit: BoxFit.fitWidth);
       displayImages.add(FadeInImage.assetNetwork(placeholder: "asset/images/loading_image.jpg", image: url, fit: BoxFit.fitWidth));
     }
 
@@ -616,6 +616,7 @@ class SingleInfoDisplay extends StatelessWidget {
 }
 
 class SingleInfoList extends StatelessWidget {
+  // info list division
   const SingleInfoList({Key? key}) : super(key: key);
 
   @override
@@ -643,6 +644,7 @@ class SingleInfoList extends StatelessWidget {
 }
 
 class SingleListItem extends StatelessWidget {
+  // List Item Widget for single detail info list, represent a line of info
   final String listKey;
   final String listValue;
 
@@ -682,6 +684,7 @@ class SingleListItem extends StatelessWidget {
 }
 
 class SingleListDivide extends StatelessWidget {
+  // Division Line Widget for single detail info list, used as division between two lines
   const SingleListDivide({Key? key}) : super(key: key);
 
   @override
@@ -694,11 +697,15 @@ class SingleListDivide extends StatelessWidget {
   }
 }
 
-class FooterFlat extends StatelessWidget {
+
+/**
+ * BELOW is the Footer Widget available for Kaiwu detail pages
+ */
+class KaiwuFooter extends StatelessWidget {
   final Image buttonLeft;
   final Image buttonRight;
 
-  const FooterFlat({
+  const KaiwuFooter({
     Key? key,
     required this.buttonLeft,
     required this.buttonRight
@@ -723,8 +730,8 @@ class FooterFlat extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      FooterButton(buttonLeft),
-                      FooterButton(buttonRight),
+                      KaiwuFooterButton(buttonLeft),
+                      KaiwuFooterButton(buttonRight),
                     ],
                   ),
                 )
@@ -737,10 +744,10 @@ class FooterFlat extends StatelessWidget {
   }
 }
 
-class FooterButton extends StatelessWidget {
+class KaiwuFooterButton extends StatelessWidget {
   final Image button;
 
-  const FooterButton(this.button, {Key? key}) : super(key: key);
+  const KaiwuFooterButton(this.button, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

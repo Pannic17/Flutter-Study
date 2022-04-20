@@ -40,6 +40,8 @@ class homePage extends StatelessWidget {
   const homePage({Key? key}) : super(key: key);
 
   @override
+
+
   Widget build(BuildContext context) {
     ScreenUtil.init(
         BoxConstraints(
@@ -59,7 +61,14 @@ class homePage extends StatelessWidget {
           decoration: BoxDecoration(color: Color(0xFF1d1d1d)),
           child: Column(
             children: [
-              SearchBar(),
+              KaiwuSearchBar(),
+              KaiwuSorterMulti(
+                tags: ["1", "2", "3"],
+                onSelect: (list) => {},
+                height: 45.w,
+                margin: EdgeInsets.symmetric(horizontal: 12.w),
+                padding: EdgeInsets.symmetric(horizontal: 12.w)
+              )
             ],
           ),
         ),
@@ -68,14 +77,14 @@ class homePage extends StatelessWidget {
   }
 }
 
-class SearchBar extends StatefulWidget {
-  const SearchBar({Key? key}) : super(key: key);
+class KaiwuSearchBar extends StatefulWidget {
+  const KaiwuSearchBar({Key? key}) : super(key: key);
 
   @override
-  State<SearchBar> createState() => _SearchBarState();
+  State<KaiwuSearchBar> createState() => _KaiwuSearchBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _KaiwuSearchBarState extends State<KaiwuSearchBar> {
   late FocusNode focus;
   int width = 520;
 
@@ -107,8 +116,8 @@ class _SearchBarState extends State<SearchBar> {
         style: TextStyle(fontSize: 30.w, color: Color(0xFFFFFFFF)),
         decoration: InputDecoration(
           hintText: "搜索 开物艺术品",
-          hintStyle: TextStyle(fontSize: 27.w, color: Color(0xFF616161)),
-          prefixIcon: Icon(Icons.search, color: Color(0xFF616161)),
+          hintStyle: TextStyle(fontSize: 27.w, color: Color(0xFF9E9E9E)),
+          prefixIcon: Icon(Icons.search, color: Color(0xFF9E9E9E)),
           focusColor: Color(0xFF7BEEEB),
           isDense: true,
           contentPadding: EdgeInsets.zero,
@@ -131,5 +140,235 @@ class _SearchBarState extends State<SearchBar> {
   }
 }
 
+class KaiwuSorterMenu extends StatefulWidget {
+  final List<String> typeList;
+  final List<String> saleList;
+  const KaiwuSorterMenu({
+    Key? key,
+    required this.typeList,
+    required this.saleList
+  }) : super(key: key);
+
+  @override
+  State<KaiwuSorterMenu> createState() => _KaiwuSorterMenuState();
+}
+
+class _KaiwuSorterMenuState extends State<KaiwuSorterMenu> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row( // Row of artwork types, multi-selectable
+          children: [
+            
+          ],
+        ),
+        Row( // Row of sale status, single-select
+          children: [
+
+          ],
+        )
+      ],
+    );
+  }
+}
 
 
+class KaiwuSorterMulti extends StatefulWidget {
+  final List<String> tags;
+  final ValueChanged<List> onSelect;
+  final double height;
+  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry padding;
+
+  const KaiwuSorterMulti({
+    Key? key,
+    required this.tags,
+    required this.onSelect,
+    this.height = 45,
+    this.margin = const EdgeInsets.symmetric(horizontal: 12),
+    this.padding = const EdgeInsets.symmetric(horizontal: 12)
+  }) : super(key: key);
+
+  @override
+  State<KaiwuSorterMulti> createState() => _KaiwuSorterMultiState();
+}
+
+class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
+  List<int> _selectedList = [];
+  final List<bool> _selectStatus = [];
+  List<KaiwuSorterItem> tagList = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    int count = 0;
+    _selectStatus.add(true);
+    for (String tag in widget.tags) {
+      count += 1;
+      _selectStatus.add(false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    tagList = [];
+    tagList.add(
+        KaiwuSorterItem(
+            tag: "全部",
+            index: 0,
+            selected: _selectStatus[0],
+            height: widget.height,
+            margin: widget.margin,
+            padding: widget.padding,
+            onSelect: (selected) {
+              if (_selectedList.isNotEmpty && selected["selected"]) {
+                for (int index in _selectedList) {
+                  _selectStatus[index] = false;
+                }
+                _selectedList = [];
+                _selectStatus[0] = true;
+              }
+              widget.onSelect(_selectedList);
+              setState(() {
+                print(_selectedList);
+              });
+            }
+        )
+    );
+    int count = 0;
+    for (String tag in widget.tags) {
+      count += 1;
+      tagList.add(KaiwuSorterItem(
+          tag: tag,
+          index: count,
+          selected: _selectStatus[count],
+          height: widget.height,
+          margin: widget.margin,
+          padding: widget.padding,
+          onSelect: (item) {
+            if (item["selected"]) {
+              _selectedList.add(item["index"]);
+              _selectStatus[0] = false;
+              _selectStatus[item["index"]] = true;
+            } else {
+              _selectedList.remove(count);
+              if (tagList.isEmpty) {
+                _selectStatus[0] = true;
+              }
+              _selectStatus[item["index"]] = false;
+            }
+            widget.onSelect(_selectedList);
+            setState(() {
+              print(item["index"].toString()+"#"+_selectedList.toString());
+            });
+          }
+      ));
+    }
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: tagList,
+      ),
+    );
+  }
+}
+
+class KaiwuSorterRadio extends StatefulWidget {
+  const KaiwuSorterRadio({Key? key}) : super(key: key);
+
+  @override
+  State<KaiwuSorterRadio> createState() => _KaiwuSorterRadioState();
+}
+
+class _KaiwuSorterRadioState extends State<KaiwuSorterRadio> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+
+
+class KaiwuSorterItem extends StatefulWidget {
+  final String tag;
+  final int index;
+  final double height;
+  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry padding;
+  final bool selected;
+  final Color textColor;
+  final Color activeTextColor;
+  final Color activeItemColor;
+  final ValueChanged<Map> onSelect;
+
+
+  const KaiwuSorterItem({
+    Key? key,
+    required this.tag,
+    required this.index,
+    this.height = 45,
+    this.margin = const EdgeInsets.symmetric(horizontal: 12),
+    this.padding = const EdgeInsets.symmetric(horizontal: 12),
+    this.selected = false,
+    this.textColor = const Color(0xFF9E9E9E),
+    this.activeTextColor = const Color(0xFF1D1D1D),
+    this.activeItemColor = const Color(0xFF7BEEEB),
+    required this.onSelect,
+  }) : super(key: key);
+
+  @override
+  State<KaiwuSorterItem> createState() => _KaiwuSorterItemState();
+}
+
+class _KaiwuSorterItemState extends State<KaiwuSorterItem> {
+  late Color _textColor;
+  late Color _itemColor;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    update();
+  }
+
+  @override
+  void didUpdateWidget(covariant KaiwuSorterItem oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    update();
+  }
+
+  void update() {
+    if (widget.selected) {
+      _textColor = widget.activeTextColor;
+      _itemColor = widget.activeItemColor;
+    } else {
+      _textColor = widget.textColor;
+      _itemColor = Colors.transparent;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Map selectedItem = {"selected": !widget.selected, "index": widget.index};
+        widget.onSelect(selectedItem);
+        print(widget.index);
+      },
+      child: Container(
+        height: widget.height,
+        margin: widget.margin,
+        padding: widget.padding,
+        decoration: BoxDecoration(
+          color: _itemColor,
+          borderRadius: BorderRadius.all(Radius.circular(2.5))
+        ),
+        child: Text(widget.tag, style: TextStyle(color: _textColor), textAlign: TextAlign.center),
+        alignment: Alignment(0,0),
+      ),
+    );
+  }
+}
