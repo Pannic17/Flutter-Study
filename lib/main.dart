@@ -59,21 +59,7 @@ class homePage extends StatelessWidget {
           child: Column(
             children: [
               KaiwuSearchBar(),
-              KaiwuSorterMulti(
-                tags: ["手办", "雕像", "3D插画"],
-                onSelect: (list) => {},
-                height: 48.w,
-                margin: EdgeInsets.symmetric(horizontal: 24.w),
-                padding: EdgeInsets.symmetric(horizontal: 12.w)
-              ),
-              KaiwuSorterRadio(
-                tags: ["已售罄", "热销中"],
-                onSelect: (list) => {},
-                height: 48.w,
-                specific: true,
-                margin: EdgeInsets.symmetric(horizontal: 24.w),
-                padding: EdgeInsets.symmetric(horizontal: 12.w)
-              )
+              KaiwuSorterMenu(typeList: ["手办", "雕像", "3D插画"], saleList: ["已售罄", "热销中"])
             ],
           ),
         ),
@@ -164,18 +150,18 @@ class _KaiwuSorterMenuState extends State<KaiwuSorterMenu> {
     return Column(
       children: [
         KaiwuSorterMulti(
-          tags: ["1", "2", "3"],
+          tags: widget.typeList,
           onSelect: (list) => {},
           height: 48.w,
-          margin: EdgeInsets.symmetric(horizontal: 12.w),
+          margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.w),
           padding: EdgeInsets.symmetric(horizontal: 12.w)
         ),
         KaiwuSorterRadio(
-            tags: ["1", "2"],
+            tags: widget.saleList,
             onSelect: (list) => {},
             height: 48.w,
             specific: true,
-            margin: EdgeInsets.symmetric(horizontal: 12.w),
+            margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.w),
             padding: EdgeInsets.symmetric(horizontal: 12.w)
         )
       ],
@@ -472,5 +458,19 @@ class _KaiwuSorterItemState extends State<KaiwuSorterItem> {
         alignment: Alignment(0,0),
       ),
     );
+  }
+}
+
+class KaiwuFilterMenu extends StatefulWidget {
+  const KaiwuFilterMenu({Key? key}) : super(key: key);
+
+  @override
+  State<KaiwuFilterMenu> createState() => _KaiwuFilterMenuState();
+}
+
+class _KaiwuFilterMenuState extends State<KaiwuFilterMenu> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
