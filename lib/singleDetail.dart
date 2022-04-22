@@ -602,7 +602,11 @@ class SingleInfoDisplay extends StatelessWidget {
       SizedBox(height: 24.w)
     ];
     for (String url in imageUrl) {
-      displayImages.add(FadeInImage.assetNetwork(placeholder: "asset/images/loading_image.jpg", image: url, fit: BoxFit.fitWidth));
+      displayImages.add(FadeInImage.assetNetwork(
+        placeholder: "asset/images/loading_image.jpg",
+        image: url,
+        fit: BoxFit.fitWidth),
+      );
     }
 
     return Container(

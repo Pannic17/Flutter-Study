@@ -54,19 +54,43 @@ class homePage extends StatelessWidget {
       appBar: AppBar(),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Container(
-          decoration: BoxDecoration(color: Color(0xFF1d1d1d)),
-          child: Column(
-            children: [
-              KaiwuSearchBar(),
-              KaiwuSorterMenu(typeList: ["手办", "雕像", "3D插画"], saleList: ["已售罄", "热销中"])
-            ],
-          ),
-        ),
+        child: KaiwuStoreBar(),
       ),
     );
   }
 }
+
+class KaiwuStoreBar extends StatefulWidget {
+  const KaiwuStoreBar({Key? key}) : super(key: key);
+
+  @override
+  State<KaiwuStoreBar> createState() => _KaiwuStoreBarState();
+}
+
+class _KaiwuStoreBarState extends State<KaiwuStoreBar> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(color: Color(0xDD1d1d1d)),
+      child: Column(
+        children: [
+          KaiwuSearchBar(),
+          KaiwuFilterMenu(
+            typeList: ["手办", "雕像", "3D插画"],
+            saleList: ["已售罄", "热销中"],
+            onFiltType: (types) => {print(types)},
+            onFiltSale: (sales) => {print(sales)},
+          ),
+          KaiwuSorterMenu(
+            tagList: ["综合","最受欢迎","最新发售","最高热度"],
+            onSort: (order) => {print(order)},
+          )
+        ],
+      ),
+    );
+  }
+}
+
 
 class KaiwuSearchBar extends StatefulWidget {
   const KaiwuSearchBar({Key? key}) : super(key: key);
@@ -131,77 +155,96 @@ class _KaiwuSearchBarState extends State<KaiwuSearchBar> {
   }
 }
 
-class KaiwuSorterMenu extends StatefulWidget {
+class KaiwuFilterMenu extends StatefulWidget {
   final List<String> typeList;
   final List<String> saleList;
-  const KaiwuSorterMenu({
+  final ValueChanged<List> onFiltType;
+  final ValueChanged<int> onFiltSale;
+  final List<int> typeSelected;
+  final int saleSelected;
+  const KaiwuFilterMenu({
     Key? key,
     required this.typeList,
-    required this.saleList
+    required this.saleList,
+    required this.onFiltType,
+    required this.onFiltSale,
+    this.typeSelected = const [],
+    this.saleSelected = 2
   }) : super(key: key);
 
   @override
-  State<KaiwuSorterMenu> createState() => _KaiwuSorterMenuState();
+  State<KaiwuFilterMenu> createState() => _KaiwuFilterMenuState();
 }
 
-class _KaiwuSorterMenuState extends State<KaiwuSorterMenu> {
+class _KaiwuFilterMenuState extends State<KaiwuFilterMenu> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        KaiwuSorterMulti(
+        KaiwuFilterMulti(
           tags: widget.typeList,
-          onSelect: (list) => {},
+          onSelect: (type) => { widget.onFiltType(type) },
+          selected: widget.typeSelected,
           height: 48.w,
-          margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.w),
+          margin: EdgeInsets.all(12.w),
           padding: EdgeInsets.symmetric(horizontal: 12.w)
         ),
-        KaiwuSorterRadio(
-            tags: widget.saleList,
-            onSelect: (list) => {},
-            height: 48.w,
-            specific: true,
-            margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.w),
-            padding: EdgeInsets.symmetric(horizontal: 12.w)
+        KaiwuFilterRadio(
+          tags: widget.saleList,
+          onSelect: (sale) => { widget.onFiltSale(sale) },
+          selected: widget.saleSelected,
+          height: 48.w,
+          specific: true,
+          margin: EdgeInsets.all(12.w),
+          padding: EdgeInsets.symmetric(horizontal: 12.w)
         )
       ],
     );
   }
 }
 
-
-class KaiwuSorterMulti extends StatefulWidget {
+class KaiwuFilterMulti extends StatefulWidget {
   final List<String> tags;
+  final List<int> selected;
   final ValueChanged<List> onSelect;
   final double height;
   final EdgeInsetsGeometry margin;
   final EdgeInsetsGeometry padding;
 
-  const KaiwuSorterMulti({
+  const KaiwuFilterMulti({
     Key? key,
     required this.tags,
     required this.onSelect,
+    this.selected = const [],
     this.height = 45,
     this.margin = const EdgeInsets.symmetric(horizontal: 12),
     this.padding = const EdgeInsets.symmetric(horizontal: 12)
   }) : super(key: key);
 
   @override
-  State<KaiwuSorterMulti> createState() => _KaiwuSorterMultiState();
+  State<KaiwuFilterMulti> createState() => _KaiwuFilterMultiState();
 }
 
-class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
+class _KaiwuFilterMultiState extends State<KaiwuFilterMulti> {
   List<int> _selectedList = [];
   final List<bool> _selectStatus = [];
-  List<KaiwuSorterItem> _tagList = [];
+  List<KaiwuFilterItem> _tagList = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _selectStatus.add(true);
-    for (int index = 0; index < widget.tags.length; index++) {
-      _selectStatus.add(false);
+    _selectedList.addAll(widget.selected);
+    _selectStatus.add(widget.selected.isEmpty ? true : false);
+    for (int index = 1; index <= widget.tags.length; index++) {
+      _selectStatus.add(widget.selected.contains(index) ? true : false);
     }
   }
 
@@ -209,7 +252,7 @@ class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
   Widget build(BuildContext context) {
     _tagList = [];
     _tagList.add(
-      KaiwuSorterItem(
+      KaiwuFilterItem(
         tag: "全部",
         index: 0,
         selected: _selectStatus[0],
@@ -226,18 +269,18 @@ class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
           }
           widget.onSelect(_selectedList);
           setState(() {
-            print("0#$_selectedList");
+            print("0#$_selectStatus");
           });
         }
       )
     );
-    int count = 0;
+    int index = 0;
     for (String tag in widget.tags) {
-      count += 1;
-      _tagList.add(KaiwuSorterItem(
+      index += 1;
+      _tagList.add(KaiwuFilterItem(
         tag: tag,
-        index: count,
-        selected: _selectStatus[count],
+        index: index,
+        selected: _selectStatus[index],
         height: widget.height,
         margin: widget.margin,
         padding: widget.padding,
@@ -255,35 +298,34 @@ class _KaiwuSorterMultiState extends State<KaiwuSorterMulti> {
           }
           widget.onSelect(_selectedList);
           setState(() {
-            print(item["index"].toString()+"#"+_selectedList.toString());
+            print(item["index"].toString()+"#"+_selectStatus.toString());
           });
         }
       ));
     }
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.w),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: _tagList,
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: _tagList,
     );
   }
 }
 
-class KaiwuSorterRadio extends StatefulWidget {
+class KaiwuFilterRadio extends StatefulWidget {
   /**
    * !!! Set specific as true when /sort api didn't change, all and selling will be reverse when sending request
    */
   final List<String> tags;
+  final int selected;
   final ValueChanged<int> onSelect;
   final double height;
   final EdgeInsetsGeometry margin;
   final EdgeInsetsGeometry padding;
   final bool specific;
-  const KaiwuSorterRadio({
+  const KaiwuFilterRadio({
     Key? key,
     required this.tags,
     required this.onSelect,
+    this.selected = 2,
     this.height = 45,
     this.margin = const EdgeInsets.symmetric(horizontal: 12),
     this.padding = const EdgeInsets.symmetric(horizontal: 12),
@@ -291,12 +333,11 @@ class KaiwuSorterRadio extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<KaiwuSorterRadio> createState() => _KaiwuSorterRadioState();
+  State<KaiwuFilterRadio> createState() => _KaiwuFilterRadioState();
 }
 
-class _KaiwuSorterRadioState extends State<KaiwuSorterRadio> {
+class _KaiwuFilterRadioState extends State<KaiwuFilterRadio> {
   int _selected = 2;
-
   /**
    * 0: Selling
    * 1: Sold
@@ -310,18 +351,26 @@ class _KaiwuSorterRadioState extends State<KaiwuSorterRadio> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _selectStatus.add(true);
-    for (int index = 0; index < widget.tags.length; index++) {
-      _selectStatus.add(false);
+    _selected = widget.selected;
+    if (widget.specific) {
+      _selectStatus.add(widget.selected == 2 ? true : false);
+      for (int index = 1; index <= widget.tags.length; index++) {
+        _selectStatus.add(widget.selected == _selectEnum[index] ? true : false);
+      }
+    } else {
+      _selectStatus.add(widget.selected == 0 ? true : false);
+      for (int index = 1; index <= widget.tags.length; index++) {
+        _selectStatus.add(widget.selected == index ? true : false);
+      }
     }
   }
 
 
   @override
   Widget build(BuildContext context) {
-    List<KaiwuSorterItem> _tagList = [];
+    List<KaiwuFilterItem> _tagList = [];
     _tagList.add(
-      KaiwuSorterItem(
+      KaiwuFilterItem(
         tag: "全部",
         index: widget.specific ? 2 : 0,
         selected: _selectStatus[0],
@@ -338,7 +387,7 @@ class _KaiwuSorterRadioState extends State<KaiwuSorterRadio> {
           _selectStatus[0] = true;
           widget.onSelect(_selected);
           setState(() {
-            print("0#$_selected");
+            print("0#$_selectStatus");
           });
         },
       )
@@ -346,7 +395,7 @@ class _KaiwuSorterRadioState extends State<KaiwuSorterRadio> {
     int count = 0;
     for (String tag in widget.tags) {
       count += 1;
-      _tagList.add(KaiwuSorterItem(
+      _tagList.add(KaiwuFilterItem(
         tag: tag,
         index: count,
         selected: _selectStatus[count],
@@ -361,25 +410,20 @@ class _KaiwuSorterRadioState extends State<KaiwuSorterRadio> {
           _selectStatus[selectMap["index"]] = true;
           widget.onSelect(_selected);
           setState(() {
-            print("${selectMap["index"]}#$_selected");
+            print("${selectMap["index"]}#$_selectStatus");
           });
         }
       ));
     }
 
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.w),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: _tagList,
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: _tagList,
     );
   }
 }
 
-
-
-class KaiwuSorterItem extends StatefulWidget {
+class KaiwuFilterItem extends StatefulWidget {
   final String tag;
   final int index;
   final double height;
@@ -392,7 +436,7 @@ class KaiwuSorterItem extends StatefulWidget {
   final ValueChanged<Map> onSelect;
 
 
-  const KaiwuSorterItem({
+  const KaiwuFilterItem({
     Key? key,
     required this.tag,
     required this.index,
@@ -407,10 +451,10 @@ class KaiwuSorterItem extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<KaiwuSorterItem> createState() => _KaiwuSorterItemState();
+  State<KaiwuFilterItem> createState() => _KaiwuFilterItemState();
 }
 
-class _KaiwuSorterItemState extends State<KaiwuSorterItem> {
+class _KaiwuFilterItemState extends State<KaiwuFilterItem> {
   late Color _textColor;
   late Color _itemColor;
 
@@ -422,7 +466,7 @@ class _KaiwuSorterItemState extends State<KaiwuSorterItem> {
   }
 
   @override
-  void didUpdateWidget(covariant KaiwuSorterItem oldWidget) {
+  void didUpdateWidget(covariant KaiwuFilterItem oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     update();
@@ -444,7 +488,6 @@ class _KaiwuSorterItemState extends State<KaiwuSorterItem> {
       onTap: () {
         Map selectedItem = {"selected": !widget.selected, "index": widget.index};
         widget.onSelect(selectedItem);
-        print("CLICK #${widget.index}");
       },
       child: Container(
         height: widget.height,
@@ -461,14 +504,148 @@ class _KaiwuSorterItemState extends State<KaiwuSorterItem> {
   }
 }
 
-class KaiwuFilterMenu extends StatefulWidget {
-  const KaiwuFilterMenu({Key? key}) : super(key: key);
+class KaiwuSorterMenu extends StatefulWidget {
+  final List<String> tagList;
+  final int selected;
+  final Color textColor;
+  final Color selectColor;
+  final ValueChanged<int> onSort;
+  const KaiwuSorterMenu({
+    Key? key,
+    required this.tagList,
+    this.selected = 1,
+    this.textColor = const Color(0xFFFFFFFF),
+    this.selectColor = const Color(0xFF7BEEEB),
+    required this.onSort
+  }) : super(key: key);
 
   @override
-  State<KaiwuFilterMenu> createState() => _KaiwuFilterMenuState();
+  State<KaiwuSorterMenu> createState() => _KaiwuSorterMenuState();
 }
 
-class _KaiwuFilterMenuState extends State<KaiwuFilterMenu> {
+class _KaiwuSorterMenuState extends State<KaiwuSorterMenu> {
+  int _selected = 1;
+  final List<bool> _selectStatus = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selected = widget.selected;
+    for (int index = 1; index <= widget.tagList.length; index++) {
+      _selectStatus.add(widget.selected == index ? true : false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<KaiwuSorterItem> _tagList = [];
+    int count = 0;
+    for (String tag in widget.tagList) {
+      count += 1;
+      _tagList.add(KaiwuSorterItem(
+        tag: tag,
+        index: count,
+        // _selectStatus[index] ? TextStyle(color: widget.selectColor) : TextStyle(color: widget.textColor),
+        textStyle: TextStyle(
+          color: _selectStatus[count - 1] ? widget.selectColor : widget.textColor,
+          fontSize: 27.w
+        ),
+        onSelect: (index) {
+          _selected = index;
+          _selectStatus.fillRange(0, _selectStatus.length, false);
+          _selectStatus[index - 1] = true;
+          setState(() {
+            print("$_selected#$_selectStatus");
+          });
+          widget.onSort(_selected);
+        }
+      ));
+    }
+    return Container(
+      padding: EdgeInsets.all(24),
+      child: Column(
+        children: _tagList,
+      ),
+    );
+  }
+}
+
+class KaiwuSorterItem extends StatefulWidget {
+  final String tag;
+  final int index;
+  final ValueChanged<int> onSelect;
+  final TextStyle textStyle;
+  final BoxDecoration decoration;
+
+  const KaiwuSorterItem({
+    Key? key,
+    required this.tag,
+    required this.index,
+    required this.onSelect,
+    this.textStyle = const TextStyle(color: Color(0xFFFFFFFF)),
+    this.decoration = const BoxDecoration()
+  }) : super(key: key);
+
+  @override
+  State<KaiwuSorterItem> createState() => _KaiwuSorterItemState();
+}
+
+class _KaiwuSorterItemState extends State<KaiwuSorterItem> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        widget.onSelect(widget.index);
+      },
+      child: Container(
+        height: 48.w,
+        margin: EdgeInsets.all(12.w),
+        decoration: widget.decoration,
+        child: Text(widget.tag, style: widget.textStyle),
+      ),
+    );
+  }
+}
+
+class KaiwuFilterButton extends StatefulWidget {
+  const KaiwuFilterButton({Key? key}) : super(key: key);
+
+  @override
+  State<KaiwuFilterButton> createState() => _KaiwuFilterButtonState();
+}
+
+class _KaiwuFilterButtonState extends State<KaiwuFilterButton> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class KaiwuSorterButton extends StatefulWidget {
+  const KaiwuSorterButton({Key? key}) : super(key: key);
+
+  @override
+  State<KaiwuSorterButton> createState() => _KaiwuSorterButtonState();
+}
+
+class _KaiwuSorterButtonState extends State<KaiwuSorterButton> {
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      onPressed: () => {},
+
+    );
+  }
+}
+
+class KaiwuBarButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  const KaiwuBarButton({
+    Key? key,
+    required this.onPressed
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container();
