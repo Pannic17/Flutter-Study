@@ -336,7 +336,7 @@ class _KaiwuSearchBarState extends State<KaiwuSearchBar> {
     controller.addListener(() {
       print('SEARCH INPUT # ${controller.text}');
     });
-    return SizedBox(
+    return Container(
       height: 72.r,
       width: widget.width.r,
       child: TextField(

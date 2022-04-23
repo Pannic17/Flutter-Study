@@ -101,6 +101,107 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+class KaiwuBarTest extends StatefulWidget {
+  const KaiwuBarTest({Key? key}) : super(key: key);
+
+  @override
+  State<KaiwuBarTest> createState() => _KaiwuBarTestState();
+}
+
+class _KaiwuBarTestState extends State<KaiwuBarTest> {
+  bool filter = false;
+  bool sorter = false;
+  bool _switchDisplay = true;
+  List<Widget> set = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    filter = false;
+    sorter = false;
+  }
+
+  @override
+  void didUpdateWidget(covariant KaiwuBarTest oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      filter = false;
+      sorter = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    set = [];
+    set.add(KaiwuBarRow(
+      switchDisplay: _switchDisplay,
+      onSearch: (input) => {print("submit $input")},
+      onTapFilter: () {
+        setState(() {
+          filter = !filter;
+          sorter = false;
+        });
+      },
+      onTapSorter: () {
+        setState(() {
+          sorter = !sorter;
+          filter = false;
+        });
+      },
+    ));
+    if (filter) {
+      set.add(KaiwuFilterMenu(
+        typeList: const ["手办", "雕像", "3D插画"],
+        saleList: const ["已售罄", "热销中"],
+        onFiltType: (types) => {print(types)},
+        onFiltSale: (sales) => {print(sales)},
+      ));
+    }
+    if (sorter) {
+      if (_switchDisplay) {
+        set.add(KaiwuSorterMenu(
+          tagList: const ["综合","最受欢迎","最新发布","最高热度"],
+          onSort: (order) => {print(order)},
+        ));
+      } else {
+        set.add(KaiwuSorterMenu(
+          tagList: const ["综合","最新发布","最高热度"],
+          onSort: (order) => {print(order)},
+        ));
+      }
+    }
+    return Container(
+      decoration: const BoxDecoration(color: Color(0xDD1d1d1d)),
+      child: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).padding.top,
+          ),
+          KaiwuSwitch(
+              switchDisplay: _switchDisplay,
+              onSwitch: (switchDisplay) {
+                FocusScope.of(context).unfocus();
+                setState(() {
+                  filter = false;
+                  sorter = false;
+                  _switchDisplay = switchDisplay;
+                });
+              }
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 36.r),
+            child: Column(
+              children: set,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class KaiwuBar extends StatelessWidget {
   final bool display;
   final bool filter;
@@ -122,7 +223,7 @@ class KaiwuBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 36.r,),
+      padding: EdgeInsets.symmetric(horizontal: 36.r),
       decoration: const BoxDecoration(color: Color(0xDD1d1d1d)),
       child: Column(
         children: [
@@ -235,7 +336,7 @@ class _KaiwuSearchBarState extends State<KaiwuSearchBar> {
     controller.addListener(() {
       print('SEARCH INPUT # ${controller.text}');
     });
-    return SizedBox(
+    return Container(
       height: 72.r,
       width: widget.width.r,
       child: TextField(
@@ -293,7 +394,7 @@ class _KaiwuFilterMenuState extends State<KaiwuFilterMenu> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 12.r,),
+      margin: EdgeInsets.symmetric(vertical: 12.r),
       child: Column(
         children: [
           KaiwuFilterMulti(
@@ -301,8 +402,8 @@ class _KaiwuFilterMenuState extends State<KaiwuFilterMenu> {
               onSelect: (type) => { widget.onFiltType(type) },
               selected: widget.typeSelected,
               height: 48.r,
-              margin: EdgeInsets.all(12.r,),
-              padding: EdgeInsets.symmetric(horizontal: 12.r,)
+              margin: EdgeInsets.all(12.r),
+              padding: EdgeInsets.symmetric(horizontal: 12.r)
           ),
           KaiwuFilterRadio(
               tags: widget.saleList,
@@ -310,8 +411,8 @@ class _KaiwuFilterMenuState extends State<KaiwuFilterMenu> {
               selected: widget.saleSelected,
               height: 48.r,
               specific: true,
-              margin: EdgeInsets.all(12.r,),
-              padding: EdgeInsets.symmetric(horizontal: 12.r,)
+              margin: EdgeInsets.all(12.r),
+              padding: EdgeInsets.symmetric(horizontal: 12.r)
           )
         ],
       ),
@@ -602,7 +703,7 @@ class _KaiwuFilterItemState extends State<KaiwuFilterItem> {
             color: _itemColor,
             borderRadius: const BorderRadius.all(Radius.circular(2.5))
         ),
-        child: Text(widget.tag, style: TextStyle(color: _textColor), textAlign: TextAlign.center),
+        child: Text(widget.tag, style: TextStyle(color: _textColor, fontSize: 27.r), textAlign: TextAlign.center),
         alignment: const Alignment(0,0),
       ),
     );
@@ -654,7 +755,7 @@ class _KaiwuSorterMenuState extends State<KaiwuSorterMenu> {
           // _selectStatus[index] ? TextStyle(color: widget.selectColor) : TextStyle(color: widget.textColor),
           textStyle: TextStyle(
               color: _selectStatus[count - 1] ? widget.selectColor : widget.textColor,
-              fontSize: 27.r,
+              fontSize: 27.r
           ),
           onSelect: (index) {
             _selected = index;
@@ -668,7 +769,7 @@ class _KaiwuSorterMenuState extends State<KaiwuSorterMenu> {
       ));
     }
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.r,),
+      padding: EdgeInsets.symmetric(vertical: 12.r),
       child: Column(
         children: _tagList,
       ),
@@ -702,7 +803,7 @@ class KaiwuSorterItem extends StatelessWidget {
       },
       child: Container(
         height: 48.r,
-        margin: EdgeInsets.all(12.r,),
+        margin: EdgeInsets.all(12.r),
         decoration: decoration,
         child: Text(tag, style: textStyle),
       ),
@@ -726,10 +827,10 @@ class KaiwuBarButton extends StatelessWidget {
     return RawMaterialButton(
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       onPressed: onPressed,
-      child: Image.asset(icon, width: 48.r, height: 48.r,),
+      child: Image.asset(icon, width: 48.r, height: 48.r),
       constraints: BoxConstraints(
           minHeight: 48.r,
-          minWidth: 48.r,
+          minWidth: 48.r
       ),
     );
   }
@@ -751,7 +852,7 @@ class KaiwuSwitch extends StatelessWidget {
     final TextStyle enabledStyle = TextStyle(fontSize: 32.r, color: Color(0xFFFFFFFF));
     final TextStyle disabledStyle = TextStyle(fontSize: 30.r, color: Color(0xFF9E9E9E));
     return Container(
-      margin: EdgeInsets.all(12.r,),
+      margin: EdgeInsets.all(12.r),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -764,7 +865,7 @@ class KaiwuSwitch extends StatelessWidget {
           ),
           Container(
             color: Color(0xFF7BEEEB),
-            margin: EdgeInsets.symmetric(horizontal: 24.r,),
+            margin: EdgeInsets.symmetric(horizontal: 24.r),
             height: 30.r,
             width: 1.r,
           ),
@@ -814,7 +915,7 @@ class KaiwuBarRow extends StatelessWidget {
         onPressed: onTapSorter
     ));
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 12.r, horizontal: 9.r,),
+      margin: EdgeInsets.symmetric(vertical: 12.r, horizontal: 9.r),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: barRow,
