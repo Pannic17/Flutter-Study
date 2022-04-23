@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_constructors, camel_case_types, prefer_const_literals_to_create_immutables, avoid_print, no_logic_in_create_state, import_of_legacy_library_into_null_safe, slash_for_doc_comments
 
+
+// ignore_for_file: no_logic_in_create_state
 
 import 'dart:io';
 import 'dart:ui';
@@ -12,7 +13,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 
 void main() async {
   if (Platform.isAndroid) {
-    SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+    SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
   runApp(const SingleApp());
@@ -24,10 +25,10 @@ class SingleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: homePage(),
+      home: const homePage(),
       theme: ThemeData(
-          backgroundColor: Color(0xFF1d1d1d),
-          textTheme: TextTheme(
+          backgroundColor: const Color(0xFF1d1d1d),
+          textTheme: const TextTheme(
             bodyText1: TextStyle(color: Color(0xFFFFFFFF)),
             bodyText2: TextStyle(color: Color(0xFFFFFFFF)),
           )
@@ -53,8 +54,8 @@ class homePage extends StatelessWidget {
     );
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(color: Color(0xFF1d1d1d)),
-        child: SingleDetail(),
+        decoration: const BoxDecoration(color: Color(0xFF1d1d1d)),
+        child: const SingleDetail(),
       ),
     );
   }
@@ -86,13 +87,13 @@ class _SingleDetailState extends State<SingleDetail> {
     return Stack(
       children: [
         SingleChildScrollView(
-          padding: EdgeInsets.all(0),
+          padding: const EdgeInsets.all(0),
           child: Stack(
             fit: StackFit.loose,
             clipBehavior: Clip.none,
             children: [
               SingleSwiper(swiperUrl: swiperUrl),
-              SinglePanel(),
+              const SinglePanel(),
             ],
           ),
         ),
@@ -125,10 +126,10 @@ class _SingleButtonSetState extends State<SingleButtonSet> {
   int collectCount = 0;
   bool likeState = true;
   bool collectState = false;
-  final Icon collectButtonTrue = Icon(CupertinoIcons.star_fill, color: Color(0xFF7BEEEB), size: 45.w,);
-  final Icon collectButtonFalse = Icon(CupertinoIcons.star, color: Color(0xFFFFFFFF), size: 45.w,);
-  final Icon likeButtonTrue = Icon(CupertinoIcons.heart_fill, color: Color(0xFF7BEEEB), size: 45.w,);
-  final Icon likeButtonFalse = Icon(CupertinoIcons.heart, color: Color(0xFFFFFFFF), size: 45.w,);
+  final Icon collectButtonTrue = Icon(CupertinoIcons.star_fill, color: const Color(0xFF7BEEEB), size: 45.w,);
+  final Icon collectButtonFalse = Icon(CupertinoIcons.star, color: const Color(0xFFFFFFFF), size: 45.w,);
+  final Icon likeButtonTrue = Icon(CupertinoIcons.heart_fill, color: const Color(0xFF7BEEEB), size: 45.w,);
+  final Icon likeButtonFalse = Icon(CupertinoIcons.heart, color: const Color(0xFFFFFFFF), size: 45.w,);
 
 
   @override
@@ -250,7 +251,7 @@ class _SingleCountButtonState extends State<SingleCountButton> {
         child: Column(
           children: [
             _button,
-            Text(_count.toString(), style: TextStyle(fontSize: 21.sp, color: Color(0xFF9E9E9E)))
+            Text(_count.toString(), style: TextStyle(fontSize: 21.sp, color: const Color(0xFF9E9E9E)))
           ],
         ),
       ),
@@ -282,7 +283,7 @@ class SingleSwiper extends StatelessWidget {
               Container(
                 width: 750.w,
                 height: 1000.w,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -307,14 +308,14 @@ class SinglePanel extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 900.w, left: 15.w, right: 15.w),
       decoration: BoxDecoration(
-          border: Border.all(width: 1, color: Color(0xFF353535)),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(5)),
-          color: Color(0x991d1d1d)
+          border: Border.all(width: 1, color: const Color(0xFF353535)),
+          borderRadius: const BorderRadius.vertical(top: const Radius.circular(5)),
+          color: const Color(0x991d1d1d)
       ),
       child: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          child: SingleInfo(),
+          child: const SingleInfo(),
         ),
       ),
     );
@@ -332,7 +333,8 @@ class SingleInfo extends StatefulWidget {
 class _SingleInfoState extends State<SingleInfo> {
 
   //TODO: REMOVE TEST STRING
-  final String intro = "常年混迹于桃花源普通鸡蛋中，外壳隐约透出桃粉色，乡人视其为天降吉星。不同于普通宠物，“赤子”幼崽破壳后只与人亲近数月，之后遁入桃林，不复归家。犹如少年离开家园去闯荡天地，因此得名。";
+  final String intro = "常年混迹于桃花源普通鸡蛋中，外壳隐约透出桃粉色，乡人视其为天降吉星。"
+      "不同于普通宠物，“赤子”幼崽破壳后只与人亲近数月，之后遁入桃林，不复归家。犹如少年离开家园去闯荡天地，因此得名。";
   final displayUrl = [
     "https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/a1.png",
     "https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/a2.png",
@@ -345,19 +347,21 @@ class _SingleInfoState extends State<SingleInfo> {
       padding: EdgeInsets.all(36.w),
       child: Column(
         children: [
-          SingleInfoMain(artworkName: "赤子", price: 598),
-          SingleHorizontalLine(),
-          SingleInfoNumber(artworkNumber: "KW00101", soldAmount: 2, totalAmount: 9),
-          SingleHorizontalLine(),
+          const SingleInfoMain(artworkName: "赤子", price: 598),
+          const SingleHorizontalLine(),
+          const SingleInfoNumber(artworkNumber: "KW00101", soldAmount: 2, totalAmount: 9),
+          const SingleHorizontalLine(),
           SingleInfoIntro(introduction: intro),
-          SingleHorizontalLine(),
-          SingleInfoCreator(),
-          SingleHorizontalLine(),
+          const SingleHorizontalLine(),
+          const SingleInfoCreator(),
+          const SingleHorizontalLine(),
           SingleInfoDisplay(imageUrl: displayUrl),
-          SingleInfoList(),
+          const SingleInfoList(),
           Text(
-            "数字藏品为虚拟数字商品，而非实物，仅限实名认证中国大陆用户购买。数字藏品的版权由发行方或原创者拥有，除另行取得版权拥有者书面同意外，用户不得将数字藏品用于任何商业用途。本商品一经售出，不支持退换。请勿对数字藏品进行炒作、场外交易、欺诈，或以任何其他非法方式进行使用。",
-            style: TextStyle(fontSize: 21.w, color: Color(0xFF616161)),
+            "数字藏品为虚拟数字商品，而非实物，仅限实名认证中国大陆用户购买。"
+                "数字藏品的版权由发行方或原创者拥有，除另行取得版权拥有者书面同意外，用户不得将数字藏品用于任何商业用途。"
+                "本商品一经售出，不支持退换。请勿对数字藏品进行炒作、场外交易、欺诈，或以任何其他非法方式进行使用。",
+            style: TextStyle(fontSize: 21.w, color: const Color(0xFF616161)),
           ),
           //Bottom=============================
           SizedBox(height: 180.w, width: 720.w)
@@ -374,7 +378,7 @@ class SingleHorizontalLine extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 1,
-      color: Color(0xFF353535),
+      color: const Color(0xFF353535),
       margin: EdgeInsets.symmetric(vertical: 36.w),
     );
   }
@@ -415,7 +419,7 @@ class SingleInfoMain extends StatelessWidget {
                       ]
                   )
               ),
-              SingleButtonSet(likeState: true, collectState: false, likeCount: 999, collectCount: 666)
+              const SingleButtonSet(likeState: true, collectState: false, likeCount: 999, collectCount: 666)
             ],
           )
         ],
@@ -463,7 +467,7 @@ class SingleInfoNumber extends StatelessWidget {
           width: 288.w,
           child: Column(
             children: [
-              Text("作品数量", style: TextStyle(fontSize: 21.w, color: Color(0xFF9E9E9E))),
+              Text("作品数量", style: TextStyle(fontSize: 21.w, color: const Color(0xFF9E9E9E))),
               Text(avlAmount.toString()+"/"+totalAmount.toString(), style: TextStyle(fontSize: 32.w))
             ],
           ),
@@ -472,12 +476,12 @@ class SingleInfoNumber extends StatelessWidget {
             margin: EdgeInsets.symmetric(horizontal: 36.w),
             width: 1,
             height: 96.w,
-            color: Color(0xFF353535)),
+            color: const Color(0xFF353535)),
         SizedBox(
           width: 280.w,
           child: Column(
             children: [
-              Text("作品编号", style: TextStyle(fontSize: 21.w, color: Color(0xFF9E9E9E))),
+              Text("作品编号", style: TextStyle(fontSize: 21.w, color: const Color(0xFF9E9E9E))),
               Text(artworkNumber, style: TextStyle(fontSize: 32.w))
             ],
           ),
@@ -516,7 +520,7 @@ class SingleInfoCreator extends StatelessWidget {
                 width: 64.w,
                 height: 64.w,
                 decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Color(0xFF353535))
+                    border: Border.all(width: 1, color: const Color(0xFF353535))
                 ),
                 child: Image.network(artistAvatar, fit: BoxFit.cover),
               ),
@@ -524,7 +528,7 @@ class SingleInfoCreator extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("艺术家", style: TextStyle(fontSize: 21.w, color: Color(0xFF9E9E9E))),
+                  Text("艺术家", style: TextStyle(fontSize: 21.w, color: const Color(0xFF9E9E9E))),
                   Text("JICHU", style: TextStyle(fontSize: 27.w))
                 ],
               )
@@ -537,7 +541,7 @@ class SingleInfoCreator extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text("所属系列", style: TextStyle(fontSize: 21.w, color: Color(0xFF9E9E9E)), textDirection: TextDirection.rtl),
+                  Text("所属系列", style: TextStyle(fontSize: 21.w, color: const Color(0xFF9E9E9E)), textDirection: TextDirection.rtl),
                   Text("桃花源", style: TextStyle(fontSize: 27.w), textDirection: TextDirection.rtl)
                 ],
               ),
@@ -546,7 +550,7 @@ class SingleInfoCreator extends StatelessWidget {
                 width: 64.w,
                 height: 64.w,
                 decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Color(0xFF353535))
+                    border: Border.all(width: 1, color: const Color(0xFF353535))
                 ),
                 child: Image.network(seriesCover, fit: BoxFit.cover),
               )
@@ -557,34 +561,6 @@ class SingleInfoCreator extends StatelessWidget {
     );
   }
 }
-
-/**
- * Container(
-    margin: EdgeInsets.only(right: 36.w),
-    width: 64.w,
-    height: 64.w,
-    decoration: BoxDecoration(
-    border: Border.all(width: 1, color: Color(0xFF353535))
-    ),
-    child: Image.network(artistAvatar, fit: BoxFit.cover),
-    ),
-    Column(
-    mainAxisAlignment: MainAxisAlignment.spaceAround,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    Text("艺术家", style: TextStyle(fontSize: 24.w)),
-    Text("所属系列", style: TextStyle(fontSize: 24.w))
-    ],
-    ),
-    SizedBox(width: 36.w),
-    Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    Text("JICHU", style: TextStyle(fontSize: 24.w)),
-    Text("桃花源", style: TextStyle(fontSize: 24.w))
-    ],
-    ),
- */
 
 class SingleInfoDisplay extends StatelessWidget {
   // image display division
@@ -632,16 +608,16 @@ class SingleInfoList extends StatelessWidget {
           margin: EdgeInsets.only(top: 36.w, left: 9.w),
           child: Text("艺术品信息", style: TextStyle(fontSize: 32.w, fontWeight: FontWeight.bold)),
         ),
-        SingleListDivide(),
-        SingleListItem(listKey: "艺术品名称", listValue: "赤子"),
-        SingleListItem(listKey: "所属系列", listValue: "桃花源"),
-        SingleListItem(listKey: "艺术家", listValue: "季初"),
-        SingleListItem(listKey: "品牌方", listValue: "开物"),
-        SingleListItem(listKey: "发行方", listValue: "开物"),
-        SingleListItem(listKey: "发行时间", listValue: "2022/03/08"),
-        SingleListItem(listKey: "确权链", listValue: "至信链"),
-        SingleListItem(listKey: "作品哈希", listValue: "fc19dc74a022690"),
-        SingleListItem(listKey: "作品编号", listValue: "KW00101"),
+        const SingleListDivide(),
+        const SingleListItem(listKey: "艺术品名称", listValue: "赤子"),
+        const SingleListItem(listKey: "所属系列", listValue: "桃花源"),
+        const SingleListItem(listKey: "艺术家", listValue: "季初"),
+        const SingleListItem(listKey: "品牌方", listValue: "开物"),
+        const SingleListItem(listKey: "发行方", listValue: "开物"),
+        const SingleListItem(listKey: "发行时间", listValue: "2022/03/08"),
+        const SingleListItem(listKey: "确权链", listValue: "至信链"),
+        const SingleListItem(listKey: "作品哈希", listValue: "fc19dc74a022690"),
+        const SingleListItem(listKey: "作品编号", listValue: "KW00101"),
       ],
     );
   }
@@ -676,12 +652,12 @@ class SingleListItem extends StatelessWidget {
                 margin: EdgeInsets.only(right: 20.w),
                 width: 1,
                 height: 32.w,
-                color: Color(0xFF353535)
+                color: const Color(0xFF353535)
             ),
             Text(listValue, style: TextStyle(fontSize: 24.w))
           ],
         ),
-        SingleListDivide()
+        const SingleListDivide()
       ],
     );
   }
@@ -696,15 +672,13 @@ class SingleListDivide extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 24.w),
       height: 1,
-      color: Color(0xFF353535),
+      color: const Color(0xFF353535),
     );
   }
 }
 
 
-/**
- * BELOW is the Footer Widget available for Kaiwu detail pages
- */
+/// BELOW is the Footer Widget available for Kaiwu detail pages
 class KaiwuFooter extends StatelessWidget {
   final Image buttonLeft;
   final Image buttonRight;
