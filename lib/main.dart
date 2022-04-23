@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, prefer_const_constructors
+// ignore_for_file: avoid_print, prefer_const_constructors, prefer_final_fields
 
 import 'dart:io';
 
@@ -40,6 +40,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _display = true;
+  bool _filter = false;
+  bool _sorter = false;
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(
@@ -61,21 +65,50 @@ class _HomePageState extends State<HomePage> {
         },
         child: Container(
           color: Color(0xFF1d1d1d),
-          child: KaiwuBar()
+          child: Column(
+            children: [
+              SizedBox(height: MediaQuery.of(context).padding.top),
+              KaiwuBar(
+                display: _display,
+                filter: _filter,
+                sorter: _sorter,
+                onSwitch: (display) {
+                  FocusScope.of(context).unfocus();
+                  setState(() {
+                    _filter = false;
+                    _sorter = false;
+                    _display = display;
+                  });
+                },
+                onTapFilter: () {
+                  setState(() {
+                    _filter = !_filter;
+                    _sorter = false;
+                  });
+                },
+                onTapSorter: () {
+                  setState(() {
+                    _sorter = !_sorter;
+                    _filter = false;
+                  });
+                }
+              ),
+            ],
+          )
         ),
       ),
     );
   }
 }
 
-class KaiwuBar extends StatefulWidget {
-  const KaiwuBar({Key? key}) : super(key: key);
+class KaiwuBarTest extends StatefulWidget {
+  const KaiwuBarTest({Key? key}) : super(key: key);
 
   @override
-  State<KaiwuBar> createState() => _KaiwuBarState();
+  State<KaiwuBarTest> createState() => _KaiwuBarTestState();
 }
 
-class _KaiwuBarState extends State<KaiwuBar> {
+class _KaiwuBarTestState extends State<KaiwuBarTest> {
   bool filter = false;
   bool sorter = false;
   bool _switchDisplay = true;
@@ -90,7 +123,7 @@ class _KaiwuBarState extends State<KaiwuBar> {
   }
 
   @override
-  void didUpdateWidget(covariant KaiwuBar oldWidget) {
+  void didUpdateWidget(covariant KaiwuBarTest oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     setState(() {
@@ -102,7 +135,7 @@ class _KaiwuBarState extends State<KaiwuBar> {
   @override
   Widget build(BuildContext context) {
     set = [];
-    set.add(KaiwuBarSet(
+    set.add(KaiwuBarRow(
       switchDisplay: _switchDisplay,
       onSearch: (input) => {print("submit $input")},
       onTapFilter: () {
@@ -162,13 +195,111 @@ class _KaiwuBarState extends State<KaiwuBar> {
             child: Column(
               children: set,
             ),
-          )
+          ),
         ],
       ),
     );
   }
 }
 
+class KaiwuBar extends StatelessWidget {
+  final bool display;
+  final bool filter;
+  final bool sorter;
+  final ValueChanged<bool> onSwitch;
+  final VoidCallback onTapFilter;
+  final VoidCallback onTapSorter;
+
+  const KaiwuBar({
+    Key? key,
+    this.display = true,
+    this.filter = false,
+    this.sorter = false,
+    required this.onSwitch,
+    required this.onTapFilter,
+    required this.onTapSorter
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 36.w),
+      decoration: const BoxDecoration(color: Color(0xDD1d1d1d)),
+      child: Column(
+        children: [
+          KaiwuSwitch(
+            switchDisplay: display,
+            onSwitch: onSwitch
+          ),
+          KaiwuBarRow(
+            switchDisplay: display,
+            onSearch: (input) => print(input),
+            onTapFilter: onTapFilter,
+            onTapSorter: onTapSorter
+          ),
+          KaiwuMenu(
+            switchDisplay: display,
+            filter: filter,
+            sorter: sorter,
+            onFiltType: (types) => print(types),
+            onFiltSale: (sales) => print(sales),
+            onSort: (order) => print(order)
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class KaiwuMenu extends StatelessWidget {
+  final bool filter;
+  final bool sorter;
+  final bool switchDisplay;
+  final ValueChanged<List> onFiltType;
+  final ValueChanged<int> onFiltSale;
+  final ValueChanged<int> onSort;
+  const KaiwuMenu({
+    Key? key,
+    this.filter = false,
+    this.sorter = false,
+    required this.switchDisplay,
+    required this.onFiltType,
+    required this.onFiltSale,
+    required this.onSort
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> set = [];
+    if (filter) {
+      set.add(KaiwuFilterMenu(
+        typeList: const ["手办", "雕像", "3D插画"],
+        saleList: const ["已售罄", "热销中"],
+        onFiltType: onFiltType,
+        onFiltSale: onFiltSale,
+      ));
+    }
+    if (sorter) {
+      if (switchDisplay) {
+        set.add(KaiwuSorterMenu(
+          tagList: const ["综合","最受欢迎","最新发布","最高热度"],
+          onSort: onSort,
+        ));
+      } else {
+        set.add(KaiwuSorterMenu(
+          tagList: const ["综合","最新发布","最高热度"],
+          onSort: onSort,
+        ));
+      }
+    }
+    return Column(
+      children: set,
+    );
+  }
+}
+
+
+// Sub-Widgets used for Bar & Menus
 class KaiwuSearchBar extends StatefulWidget {
   final ValueChanged<String> search;
   final double width;
@@ -260,13 +391,6 @@ class KaiwuFilterMenu extends StatefulWidget {
 }
 
 class _KaiwuFilterMenuState extends State<KaiwuFilterMenu> {
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -653,7 +777,9 @@ class _KaiwuSorterMenuState extends State<KaiwuSorterMenu> {
   }
 }
 
-class KaiwuSorterItem extends StatefulWidget {
+
+// Stateless Sorter Item usd in Sorter Menu
+class KaiwuSorterItem extends StatelessWidget {
   final String tag;
   final int index;
   final ValueChanged<int> onSelect;
@@ -670,89 +796,26 @@ class KaiwuSorterItem extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<KaiwuSorterItem> createState() => _KaiwuSorterItemState();
-}
-
-class _KaiwuSorterItemState extends State<KaiwuSorterItem> {
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        widget.onSelect(widget.index);
+        onSelect(index);
       },
       child: Container(
         height: 48.w,
         margin: EdgeInsets.all(12.w),
-        decoration: widget.decoration,
-        child: Text(widget.tag, style: widget.textStyle),
+        decoration: decoration,
+        child: Text(tag, style: textStyle),
       ),
     );
   }
 }
 
-class KaiwuBarSet extends StatefulWidget {
-  final ValueChanged<String> onSearch;
-  final VoidCallback onTapFilter;
-  final VoidCallback onTapSorter;
-  final bool switchDisplay;
-  const KaiwuBarSet({
-    Key? key,
-    required this.onSearch,
-    required this.onTapFilter,
-    required this.onTapSorter,
-    this.switchDisplay = true
-  }) : super(key: key);
-
-  @override
-  State<KaiwuBarSet> createState() => _KaiwuBarSetState();
-}
-
-class _KaiwuBarSetState extends State<KaiwuBarSet> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(covariant KaiwuBarSet oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-    setState(() {
-
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> barRow = [];
-    barRow.add(KaiwuSearchBar(
-      search: widget.onSearch,
-      width: widget.switchDisplay ? 520 : 560,
-    ));
-    if (widget.switchDisplay) {
-      barRow.add(KaiwuBarButton( //Filter
-          icon: "asset/icons/icon_filter.png",
-          onPressed: widget.onTapFilter
-      ));
-    }
-    barRow.add(KaiwuBarButton( //Sorter
-        icon: "asset/icons/icon_sorter.png",
-        onPressed: widget.onTapSorter
-    ));
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 12.w, horizontal: 9.w),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: barRow,
-      ),
-    );
-  }
-}
-
+// Stateless Bar Button used in Bar Row as sorter & filter button
 class KaiwuBarButton extends StatelessWidget {
   final String icon;
   final VoidCallback onPressed;
+
   const KaiwuBarButton({
     Key? key,
     required this.icon,
@@ -773,7 +836,8 @@ class KaiwuBarButton extends StatelessWidget {
   }
 }
 
-class KaiwuSwitch extends StatefulWidget {
+// Stateless Switch
+class KaiwuSwitch extends StatelessWidget {
   final bool switchDisplay; // true::single | false::series
   final ValueChanged<bool> onSwitch;
 
@@ -784,22 +848,9 @@ class KaiwuSwitch extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<KaiwuSwitch> createState() => _KaiwuSwitchState();
-}
-
-class _KaiwuSwitchState extends State<KaiwuSwitch> {
-  final TextStyle enabledStyle = TextStyle(fontSize: 32.w, color: Color(0xFFFFFFFF));
-  final TextStyle disabledStyle = TextStyle(fontSize: 30.w, color: Color(0xFF9E9E9E));
-
-  @override
-  void didUpdateWidget(covariant KaiwuSwitch oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final TextStyle enabledStyle = TextStyle(fontSize: 32.w, color: Color(0xFFFFFFFF));
+    final TextStyle disabledStyle = TextStyle(fontSize: 30.w, color: Color(0xFF9E9E9E));
     return Container(
       margin: EdgeInsets.all(12.w),
       child: Row(
@@ -808,9 +859,9 @@ class _KaiwuSwitchState extends State<KaiwuSwitch> {
           RawMaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             onPressed: () {
-              widget.onSwitch(true);
+              onSwitch(true);
             },
-            child: Text("艺术单品", style: widget.switchDisplay ? enabledStyle : disabledStyle),
+            child: Text("艺术单品", style: switchDisplay ? enabledStyle : disabledStyle),
           ),
           Container(
             color: Color(0xFF7BEEEB),
@@ -821,11 +872,53 @@ class _KaiwuSwitchState extends State<KaiwuSwitch> {
           RawMaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             onPressed: () {
-              widget.onSwitch(false);
+              onSwitch(false);
             },
-            child: Text("系列作品", style: widget.switchDisplay ? disabledStyle : enabledStyle),
+            child: Text("系列作品", style: switchDisplay ? disabledStyle : enabledStyle),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// Stateless Bar Row include search bar & buttons
+class KaiwuBarRow extends StatelessWidget {
+  final ValueChanged<String> onSearch;
+  final VoidCallback onTapFilter;
+  final VoidCallback onTapSorter;
+  final bool switchDisplay;
+
+  const KaiwuBarRow({
+    Key? key,
+    required this.onSearch,
+    required this.onTapFilter,
+    required this.onTapSorter,
+    this.switchDisplay = true
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> barRow = [];
+    barRow.add(KaiwuSearchBar(
+      search: onSearch,
+      width: switchDisplay ? 520 : 560,
+    ));
+    if (switchDisplay) {
+      barRow.add(KaiwuBarButton( //Filter
+          icon: "asset/icons/icon_filter.png",
+          onPressed: onTapFilter
+      ));
+    }
+    barRow.add(KaiwuBarButton( //Sorter
+        icon: "asset/icons/icon_sorter.png",
+        onPressed: onTapSorter
+    ));
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 12.w, horizontal: 9.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: barRow,
       ),
     );
   }
