@@ -899,18 +899,15 @@ class KaiwuBarRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> barRow = [];
-    barRow.add(KaiwuSearchBar(
-      search: onSearch,
-      width: switchDisplay ? 520 : 560,
-    ));
+    List<Widget> options = [];
     if (switchDisplay) {
-      barRow.add(KaiwuBarButton( //Filter
+      options.add(KaiwuBarButton( //Filter
           icon: "asset/icons/icon_filter.png",
           onPressed: onTapFilter
       ));
     }
-    barRow.add(KaiwuBarButton( //Sorter
+    options.add(SizedBox(width: 24.r));
+    options.add(KaiwuBarButton( //Sorter
         icon: "asset/icons/icon_sorter.png",
         onPressed: onTapSorter
     ));
@@ -918,7 +915,16 @@ class KaiwuBarRow extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 12.r, horizontal: 9.r),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: barRow,
+        children: [
+          KaiwuSearchBar(
+            search: onSearch, 
+            width: switchDisplay ? 520 : 560
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: options
+          )
+        ],
       ),
     );
   }
