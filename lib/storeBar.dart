@@ -64,139 +64,38 @@ class _HomePageState extends State<HomePage> {
           setState(() {});
         },
         child: Container(
-          color: Color(0xFF1d1d1d),
-          child: Column(
-            children: [
-              SizedBox(height: MediaQuery.of(context).padding.top),
-              KaiwuBar(
-                display: _display,
-                filter: _filter,
-                sorter: _sorter,
-                onSwitch: (display) {
-                  FocusScope.of(context).unfocus();
-                  setState(() {
-                    _filter = false;
-                    _sorter = false;
-                    _display = display;
-                  });
-                },
-                onTapFilter: () {
-                  setState(() {
-                    _filter = !_filter;
-                    _sorter = false;
-                  });
-                },
-                onTapSorter: () {
-                  setState(() {
-                    _sorter = !_sorter;
-                    _filter = false;
-                  });
-                }
-              ),
-            ],
-          )
-        ),
-      ),
-    );
-  }
-}
-
-class KaiwuBarTest extends StatefulWidget {
-  const KaiwuBarTest({Key? key}) : super(key: key);
-
-  @override
-  State<KaiwuBarTest> createState() => _KaiwuBarTestState();
-}
-
-class _KaiwuBarTestState extends State<KaiwuBarTest> {
-  bool filter = false;
-  bool sorter = false;
-  bool _switchDisplay = true;
-  List<Widget> set = [];
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    filter = false;
-    sorter = false;
-  }
-
-  @override
-  void didUpdateWidget(covariant KaiwuBarTest oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-    setState(() {
-      filter = false;
-      sorter = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    set = [];
-    set.add(KaiwuBarRow(
-      switchDisplay: _switchDisplay,
-      onSearch: (input) => {print("submit $input")},
-      onTapFilter: () {
-        setState(() {
-          filter = !filter;
-          sorter = false;
-        });
-      },
-      onTapSorter: () {
-        setState(() {
-          sorter = !sorter;
-          filter = false;
-        });
-      },
-    ));
-    if (filter) {
-      set.add(KaiwuFilterMenu(
-        typeList: const ["手办", "雕像", "3D插画"],
-        saleList: const ["已售罄", "热销中"],
-        onFiltType: (types) => {print(types)},
-        onFiltSale: (sales) => {print(sales)},
-      ));
-    }
-    if (sorter) {
-      if (_switchDisplay) {
-        set.add(KaiwuSorterMenu(
-          tagList: const ["综合","最受欢迎","最新发布","最高热度"],
-          onSort: (order) => {print(order)},
-        ));
-      } else {
-        set.add(KaiwuSorterMenu(
-          tagList: const ["综合","最新发布","最高热度"],
-          onSort: (order) => {print(order)},
-        ));
-      }
-    }
-    return Container(
-      decoration: const BoxDecoration(color: Color(0xDD1d1d1d)),
-      child: Column(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).padding.top,
-          ),
-          KaiwuSwitch(
-              switchDisplay: _switchDisplay,
-              onSwitch: (switchDisplay) {
-                FocusScope.of(context).unfocus();
-                setState(() {
-                  filter = false;
-                  sorter = false;
-                  _switchDisplay = switchDisplay;
-                });
-              }
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 36.r),
+            color: Color(0xFF1d1d1d),
             child: Column(
-              children: set,
-            ),
-          ),
-        ],
+              children: [
+                SizedBox(height: MediaQuery.of(context).padding.top),
+                KaiwuBar(
+                    display: _display,
+                    filter: _filter,
+                    sorter: _sorter,
+                    onSwitch: (display) {
+                      FocusScope.of(context).unfocus();
+                      setState(() {
+                        _filter = false;
+                        _sorter = false;
+                        _display = display;
+                      });
+                    },
+                    onTapFilter: () {
+                      setState(() {
+                        _filter = !_filter;
+                        _sorter = false;
+                      });
+                    },
+                    onTapSorter: () {
+                      setState(() {
+                        _sorter = !_sorter;
+                        _filter = false;
+                      });
+                    }
+                ),
+              ],
+            )
+        ),
       ),
     );
   }
@@ -223,27 +122,27 @@ class KaiwuBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 36.r),
+      padding: EdgeInsets.symmetric(horizontal: 36.r,),
       decoration: const BoxDecoration(color: Color(0xDD1d1d1d)),
       child: Column(
         children: [
           KaiwuSwitch(
-            switchDisplay: display,
-            onSwitch: onSwitch
+              switchDisplay: display,
+              onSwitch: onSwitch
           ),
           KaiwuBarRow(
-            switchDisplay: display,
-            onSearch: (input) => print(input),
-            onTapFilter: onTapFilter,
-            onTapSorter: onTapSorter
+              switchDisplay: display,
+              onSearch: (input) => print(input),
+              onTapFilter: onTapFilter,
+              onTapSorter: onTapSorter
           ),
           KaiwuMenu(
-            switchDisplay: display,
-            filter: filter,
-            sorter: sorter,
-            onFiltType: (types) => print(types),
-            onFiltSale: (sales) => print(sales),
-            onSort: (order) => print(order)
+              switchDisplay: display,
+              filter: filter,
+              sorter: sorter,
+              onFiltType: (types) => print(types),
+              onFiltSale: (sales) => print(sales),
+              onSort: (order) => print(order)
           ),
         ],
       ),
@@ -343,24 +242,24 @@ class _KaiwuSearchBarState extends State<KaiwuSearchBar> {
         controller: controller,
         style: TextStyle(fontSize: 30.r, color: const Color(0xFFFFFFFF)),
         decoration: InputDecoration(
-          hintText: "搜索 开物艺术品",
-          hintStyle: TextStyle(fontSize: 27.r, color: const Color(0xFF9E9E9E)),
-          prefixIcon: const Icon(Icons.search, color: Color(0xFF9E9E9E)),
-          focusColor: const Color(0xFF7BEEEB),
-          isDense: true,
-          contentPadding: EdgeInsets.zero,
-          border: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF616161)),
-            borderRadius: BorderRadius.horizontal(left: Radius.circular(100), right: Radius.circular(100))
-          ),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF616161)),
-            borderRadius: BorderRadius.horizontal(left: Radius.circular(100), right: Radius.circular(100))
-          ),
-          focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFF7BEEEB)),
-              borderRadius: BorderRadius.horizontal(left: Radius.circular(100), right: Radius.circular(100))
-          )
+            hintText: "搜索 开物艺术品",
+            hintStyle: TextStyle(fontSize: 27.r, color: const Color(0xFF9E9E9E)),
+            prefixIcon: const Icon(Icons.search, color: Color(0xFF9E9E9E)),
+            focusColor: const Color(0xFF7BEEEB),
+            isDense: true,
+            contentPadding: EdgeInsets.zero,
+            border: const OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFF616161)),
+                borderRadius: BorderRadius.horizontal(left: Radius.circular(100), right: Radius.circular(100))
+            ),
+            enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFF616161)),
+                borderRadius: BorderRadius.horizontal(left: Radius.circular(100), right: Radius.circular(100))
+            ),
+            focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFF7BEEEB)),
+                borderRadius: BorderRadius.horizontal(left: Radius.circular(100), right: Radius.circular(100))
+            )
         ),
         focusNode: focus,
         onSubmitted: widget.search,
@@ -394,7 +293,7 @@ class _KaiwuFilterMenuState extends State<KaiwuFilterMenu> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 12.r),
+      margin: EdgeInsets.symmetric(vertical: 12.r,),
       child: Column(
         children: [
           KaiwuFilterMulti(
@@ -402,8 +301,8 @@ class _KaiwuFilterMenuState extends State<KaiwuFilterMenu> {
               onSelect: (type) => { widget.onFiltType(type) },
               selected: widget.typeSelected,
               height: 48.r,
-              margin: EdgeInsets.all(12.r),
-              padding: EdgeInsets.symmetric(horizontal: 12.r)
+              margin: EdgeInsets.all(12.r,),
+              padding: EdgeInsets.symmetric(horizontal: 12.r,)
           ),
           KaiwuFilterRadio(
               tags: widget.saleList,
@@ -411,8 +310,8 @@ class _KaiwuFilterMenuState extends State<KaiwuFilterMenu> {
               selected: widget.saleSelected,
               height: 48.r,
               specific: true,
-              margin: EdgeInsets.all(12.r),
-              padding: EdgeInsets.symmetric(horizontal: 12.r)
+              margin: EdgeInsets.all(12.r,),
+              padding: EdgeInsets.symmetric(horizontal: 12.r,)
           )
         ],
       ),
@@ -462,55 +361,55 @@ class _KaiwuFilterMultiState extends State<KaiwuFilterMulti> {
   Widget build(BuildContext context) {
     _tagList = [];
     _tagList.add(
-      KaiwuFilterItem(
-        tag: "全部",
-        index: 0,
-        selected: _selectStatus[0],
-        height: widget.height,
-        margin: widget.margin,
-        padding: widget.padding,
-        onSelect: (selected) {
-          if (_selectedList.isNotEmpty && selected["selected"]) {
-            for (int index in _selectedList) {
-              _selectStatus[index] = false;
+        KaiwuFilterItem(
+            tag: "全部",
+            index: 0,
+            selected: _selectStatus[0],
+            height: widget.height,
+            margin: widget.margin,
+            padding: widget.padding,
+            onSelect: (selected) {
+              if (_selectedList.isNotEmpty && selected["selected"]) {
+                for (int index in _selectedList) {
+                  _selectStatus[index] = false;
+                }
+                _selectedList = [];
+                _selectStatus[0] = true;
+              }
+              widget.onSelect(_selectedList);
+              setState(() {
+                print("0#$_selectStatus");
+              });
             }
-            _selectedList = [];
-            _selectStatus[0] = true;
-          }
-          widget.onSelect(_selectedList);
-          setState(() {
-            print("0#$_selectStatus");
-          });
-        }
-      )
+        )
     );
     int index = 0;
     for (String tag in widget.tags) {
       index += 1;
       _tagList.add(KaiwuFilterItem(
-        tag: tag,
-        index: index,
-        selected: _selectStatus[index],
-        height: widget.height,
-        margin: widget.margin,
-        padding: widget.padding,
-        onSelect: (item) {
-          if (item["selected"]) {
-            _selectedList.add(item["index"]);
-            _selectStatus[0] = false;
-            _selectStatus[item["index"]] = true;
-          } else {
-            _selectedList.remove(item["index"]);
-            if (_selectedList.isEmpty) {
-              _selectStatus[0] = true;
+          tag: tag,
+          index: index,
+          selected: _selectStatus[index],
+          height: widget.height,
+          margin: widget.margin,
+          padding: widget.padding,
+          onSelect: (item) {
+            if (item["selected"]) {
+              _selectedList.add(item["index"]);
+              _selectStatus[0] = false;
+              _selectStatus[item["index"]] = true;
+            } else {
+              _selectedList.remove(item["index"]);
+              if (_selectedList.isEmpty) {
+                _selectStatus[0] = true;
+              }
+              _selectStatus[item["index"]] = false;
             }
-            _selectStatus[item["index"]] = false;
+            widget.onSelect(_selectedList);
+            setState(() {
+              print(item["index"].toString()+"#"+_selectStatus.toString());
+            });
           }
-          widget.onSelect(_selectedList);
-          setState(() {
-            print(item["index"].toString()+"#"+_selectStatus.toString());
-          });
-        }
       ));
     }
     return Row(
@@ -576,49 +475,49 @@ class _KaiwuFilterRadioState extends State<KaiwuFilterRadio> {
   Widget build(BuildContext context) {
     List<KaiwuFilterItem> _tagList = [];
     _tagList.add(
-      KaiwuFilterItem(
-        tag: "全部",
-        index: widget.specific ? 2 : 0,
-        selected: _selectStatus[0],
-        height: widget.height,
-        margin: widget.margin,
-        padding: widget.padding,
-        onSelect: (selectMap) {
-          if (widget.specific) {
-            _selectStatus[_selectEnum.indexOf(_selected)] = false;
-          } else {
-            _selectStatus[_selected] = false;
-          }
-          _selected = widget.specific ? _selectEnum[0] : 0;
-          _selectStatus[0] = true;
-          widget.onSelect(_selected);
-          setState(() {
-            print("0#$_selectStatus");
-          });
-        },
-      )
+        KaiwuFilterItem(
+          tag: "全部",
+          index: widget.specific ? 2 : 0,
+          selected: _selectStatus[0],
+          height: widget.height,
+          margin: widget.margin,
+          padding: widget.padding,
+          onSelect: (selectMap) {
+            if (widget.specific) {
+              _selectStatus[_selectEnum.indexOf(_selected)] = false;
+            } else {
+              _selectStatus[_selected] = false;
+            }
+            _selected = widget.specific ? _selectEnum[0] : 0;
+            _selectStatus[0] = true;
+            widget.onSelect(_selected);
+            setState(() {
+              print("0#$_selectStatus");
+            });
+          },
+        )
     );
     int count = 0;
     for (String tag in widget.tags) {
       count += 1;
       _tagList.add(KaiwuFilterItem(
-        tag: tag,
-        index: count,
-        selected: _selectStatus[count],
-        height: widget.height,
-        margin: widget.margin,
-        padding: widget.padding,
-        onSelect: (selectMap) {
-          for (int index = 0; index < _selectStatus.length; index++) {
-            _selectStatus[index] = false;
+          tag: tag,
+          index: count,
+          selected: _selectStatus[count],
+          height: widget.height,
+          margin: widget.margin,
+          padding: widget.padding,
+          onSelect: (selectMap) {
+            for (int index = 0; index < _selectStatus.length; index++) {
+              _selectStatus[index] = false;
+            }
+            _selected = widget.specific ? _selectEnum[selectMap["index"]] : selectMap["index"];
+            _selectStatus[selectMap["index"]] = true;
+            widget.onSelect(_selected);
+            setState(() {
+              print("${selectMap["index"]}#$_selectStatus");
+            });
           }
-          _selected = widget.specific ? _selectEnum[selectMap["index"]] : selectMap["index"];
-          _selectStatus[selectMap["index"]] = true;
-          widget.onSelect(_selected);
-          setState(() {
-            print("${selectMap["index"]}#$_selectStatus");
-          });
-        }
       ));
     }
 
@@ -700,10 +599,10 @@ class _KaiwuFilterItemState extends State<KaiwuFilterItem> {
         margin: widget.margin,
         padding: widget.padding,
         decoration: BoxDecoration(
-          color: _itemColor,
-          borderRadius: const BorderRadius.all(Radius.circular(2.5))
+            color: _itemColor,
+            borderRadius: const BorderRadius.all(Radius.circular(2.5))
         ),
-        child: Text(widget.tag, style: TextStyle(color: _textColor, fontSize: 27.r), textAlign: TextAlign.center),
+        child: Text(widget.tag, style: TextStyle(color: _textColor), textAlign: TextAlign.center),
         alignment: const Alignment(0,0),
       ),
     );
@@ -750,26 +649,26 @@ class _KaiwuSorterMenuState extends State<KaiwuSorterMenu> {
     for (String tag in widget.tagList) {
       count += 1;
       _tagList.add(KaiwuSorterItem(
-        tag: tag,
-        index: count,
-        // _selectStatus[index] ? TextStyle(color: widget.selectColor) : TextStyle(color: widget.textColor),
-        textStyle: TextStyle(
-          color: _selectStatus[count - 1] ? widget.selectColor : widget.textColor,
-          fontSize: 27.r
-        ),
-        onSelect: (index) {
-          _selected = index;
-          _selectStatus.fillRange(0, _selectStatus.length, false);
-          _selectStatus[index - 1] = true;
-          setState(() {
-            print("$_selected#$_selectStatus");
-          });
-          widget.onSort(_selected);
-        }
+          tag: tag,
+          index: count,
+          // _selectStatus[index] ? TextStyle(color: widget.selectColor) : TextStyle(color: widget.textColor),
+          textStyle: TextStyle(
+              color: _selectStatus[count - 1] ? widget.selectColor : widget.textColor,
+              fontSize: 27.r,
+          ),
+          onSelect: (index) {
+            _selected = index;
+            _selectStatus.fillRange(0, _selectStatus.length, false);
+            _selectStatus[index - 1] = true;
+            setState(() {
+              print("$_selected#$_selectStatus");
+            });
+            widget.onSort(_selected);
+          }
       ));
     }
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.r),
+      padding: EdgeInsets.symmetric(vertical: 12.r,),
       child: Column(
         children: _tagList,
       ),
@@ -803,7 +702,7 @@ class KaiwuSorterItem extends StatelessWidget {
       },
       child: Container(
         height: 48.r,
-        margin: EdgeInsets.all(12.r),
+        margin: EdgeInsets.all(12.r,),
         decoration: decoration,
         child: Text(tag, style: textStyle),
       ),
@@ -827,10 +726,10 @@ class KaiwuBarButton extends StatelessWidget {
     return RawMaterialButton(
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       onPressed: onPressed,
-      child: Image.asset(icon, width: 48.r, height: 48.r),
+      child: Image.asset(icon, width: 48.r, height: 48.r,),
       constraints: BoxConstraints(
-        minHeight: 48.r,
-        minWidth: 48.r
+          minHeight: 48.r,
+          minWidth: 48.r,
       ),
     );
   }
@@ -852,7 +751,7 @@ class KaiwuSwitch extends StatelessWidget {
     final TextStyle enabledStyle = TextStyle(fontSize: 32.r, color: Color(0xFFFFFFFF));
     final TextStyle disabledStyle = TextStyle(fontSize: 30.r, color: Color(0xFF9E9E9E));
     return Container(
-      margin: EdgeInsets.all(12.r),
+      margin: EdgeInsets.all(12.r,),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -865,7 +764,7 @@ class KaiwuSwitch extends StatelessWidget {
           ),
           Container(
             color: Color(0xFF7BEEEB),
-            margin: EdgeInsets.symmetric(horizontal: 24.r),
+            margin: EdgeInsets.symmetric(horizontal: 24.r,),
             height: 30.r,
             width: 1.r,
           ),
@@ -915,7 +814,7 @@ class KaiwuBarRow extends StatelessWidget {
         onPressed: onTapSorter
     ));
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 12.r, horizontal: 9.r),
+      margin: EdgeInsets.symmetric(vertical: 12.r, horizontal: 9.r,),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: barRow,
