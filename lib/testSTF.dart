@@ -262,3 +262,105 @@ class _KaiwuBarTestState extends State<KaiwuBarTest> {
     );
   }
 }
+
+
+class KaiwuBarTest extends StatefulWidget {
+  const KaiwuBarTest({Key? key}) : super(key: key);
+
+  @override
+  State<KaiwuBarTest> createState() => _KaiwuBarTestState();
+}
+
+class _KaiwuBarTestState extends State<KaiwuBarTest> {
+  bool filter = false;
+  bool sorter = false;
+  bool _switchDisplay = true;
+  List<Widget> set = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    filter = false;
+    sorter = false;
+  }
+
+  @override
+  void didUpdateWidget(covariant KaiwuBarTest oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      filter = false;
+      sorter = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    set = [];
+    set.add(KaiwuBarRow(
+      switchDisplay: _switchDisplay,
+      onSearch: (input) => {print("submit $input")},
+      onTapFilter: () {
+        setState(() {
+          filter = !filter;
+          sorter = false;
+        });
+      },
+      onTapSorter: () {
+        setState(() {
+          sorter = !sorter;
+          filter = false;
+        });
+      },
+    ));
+    if (filter) {
+      set.add(KaiwuFilterMenu(
+        typeList: const ["手办", "雕像", "3D插画"],
+        saleList: const ["已售罄", "热销中"],
+        onFiltType: (types) => {print(types)},
+        onFiltSale: (sales) => {print(sales)},
+      ));
+    }
+    if (sorter) {
+      if (_switchDisplay) {
+        set.add(KaiwuSorterMenu(
+          tagList: const ["综合","最受欢迎","最新发布","最高热度"],
+          onSort: (order) => {print(order)},
+        ));
+      } else {
+        set.add(KaiwuSorterMenu(
+          tagList: const ["综合","最新发布","最高热度"],
+          onSort: (order) => {print(order)},
+        ));
+      }
+    }
+    return Container(
+      decoration: const BoxDecoration(color: Color(0xDD1d1d1d)),
+      child: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).padding.top,
+          ),
+          KaiwuSwitch(
+              switchDisplay: _switchDisplay,
+              onSwitch: (switchDisplay) {
+                FocusScope.of(context).unfocus();
+                setState(() {
+                  filter = false;
+                  sorter = false;
+                  _switchDisplay = switchDisplay;
+                });
+              }
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 36.r),
+            child: Column(
+              children: set,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
