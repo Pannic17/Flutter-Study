@@ -45,7 +45,7 @@ class homePage extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(color: Color(0xFF1d1d1d)),
         padding: EdgeInsets.symmetric(
-            horizontal: 27.w
+            horizontal: 27.r
         ),
         child: homeContent(),
       ),
@@ -62,8 +62,8 @@ class homeContent extends StatelessWidget {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.56,
-          mainAxisSpacing: 24.w,
-          crossAxisSpacing: 24.w
+          mainAxisSpacing: 24.r,
+          crossAxisSpacing: 24.r
       ),
       children: <Widget>[
         homeItem("https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s1.png",
@@ -98,7 +98,7 @@ class homeItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(9.w),
+      padding: EdgeInsets.all(9.f),
       decoration: BoxDecoration(
           color: Color(0xFF292929),
           border: Border.all(width: 1, color: Color(0xFF353535)),
@@ -114,7 +114,7 @@ class homeItem extends StatelessWidget {
             child: Image.network(imageUrl),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 9.w),
+            margin: EdgeInsets.symmetric(horizontal: 9.r),
             child: ItemText(name: name, number: number, price: price, avlAmount: avlAmount, totalAmount: totalAmount),
           )
         ],
@@ -145,20 +145,20 @@ class ItemText extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.symmetric(vertical: 21.w),
+            margin: EdgeInsets.symmetric(vertical: 21.r),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, textAlign: TextAlign.left, style: TextStyle(fontSize: 27.w)),
-                Text(number, textAlign: TextAlign.left, style: TextStyle(fontSize: 27.w)),
+                Text(name, textAlign: TextAlign.left, style: TextStyle(fontSize: 27.r)),
+                Text(number, textAlign: TextAlign.left, style: TextStyle(fontSize: 27.r)),
               ],
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Text>[
-              Text("￥"+price.toString(), style: TextStyle(fontSize: 27.w, fontWeight: FontWeight.bold)),
-              Text(avlAmount.toString()+"/"+totalAmount.toString(), style: TextStyle(fontSize: 27.w))
+              Text("￥"+price.toString(), style: TextStyle(fontSize: 27.r, fontWeight: FontWeight.bold)),
+              Text(avlAmount.toString()+"/"+totalAmount.toString(), style: TextStyle(fontSize: 27.r))
             ],
           )
         ]
