@@ -25,7 +25,7 @@ class SingleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const homePage(),
+      home: const SingleDetailPage(),
       theme: ThemeData(
           backgroundColor: const Color(0xFF1d1d1d),
           textTheme: const TextTheme(
@@ -37,8 +37,8 @@ class SingleApp extends StatelessWidget {
   }
 }
 
-class homePage extends StatelessWidget {
-  const homePage({Key? key}) : super(key: key);
+class SingleDetailPage extends StatelessWidget {
+  const SingleDetailPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +53,15 @@ class homePage extends StatelessWidget {
         orientation: Orientation.portrait
     );
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(color: Color(0xFF1d1d1d)),
-        child: const SingleDetail(),
-      ),
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(color: Color(0xFF1d1d1d)),
+            child: const SingleDetail(),
+          ),
+          const KaiwuHeaderButton()
+        ],
+      )
     );
   }
 }
@@ -77,8 +82,8 @@ class _SingleDetailState extends State<SingleDetail> {
     "https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s2.png",
     "https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s3.png"
   ];
-  final buttonLeft = Image.asset("asset/images/single_button_view.png", width: 360.w, height: 90.w);
-  final buttonRight = Image.asset("asset/images/single_button_buy.png", width: 360.w, height: 90.w);
+  final buttonLeft = Image.asset("asset/images/single_button_view.png", width: 360.r, height: 90.r);
+  final buttonRight = Image.asset("asset/images/single_button_buy.png", width: 360.r, height: 90.r);
 
 
 
@@ -97,7 +102,7 @@ class _SingleDetailState extends State<SingleDetail> {
             ],
           ),
         ),
-        KaiwuFooter(buttonLeft: buttonLeft, buttonRight: buttonRight)
+        KaiwuPageFooter(buttonLeft: buttonLeft, buttonRight: buttonRight)
       ],
     );
   }
@@ -126,10 +131,10 @@ class _SingleButtonSetState extends State<SingleButtonSet> {
   int collectCount = 0;
   bool likeState = true;
   bool collectState = false;
-  final Icon collectButtonTrue = Icon(CupertinoIcons.star_fill, color: const Color(0xFF7BEEEB), size: 45.w,);
-  final Icon collectButtonFalse = Icon(CupertinoIcons.star, color: const Color(0xFFFFFFFF), size: 45.w,);
-  final Icon likeButtonTrue = Icon(CupertinoIcons.heart_fill, color: const Color(0xFF7BEEEB), size: 45.w,);
-  final Icon likeButtonFalse = Icon(CupertinoIcons.heart, color: const Color(0xFFFFFFFF), size: 45.w,);
+  final Icon collectButtonTrue = Icon(CupertinoIcons.star_fill, color: const Color(0xFF7BEEEB), size: 45.r,);
+  final Icon collectButtonFalse = Icon(CupertinoIcons.star, color: const Color(0xFFFFFFFF), size: 45.r,);
+  final Icon likeButtonTrue = Icon(CupertinoIcons.heart_fill, color: const Color(0xFF7BEEEB), size: 45.r,);
+  final Icon likeButtonFalse = Icon(CupertinoIcons.heart, color: const Color(0xFFFFFFFF), size: 45.r,);
 
 
   @override
@@ -238,8 +243,8 @@ class _SingleCountButtonState extends State<SingleCountButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 72.w,
-      width: 72.w,
+      height: 72.r,
+      width: 72.r,
       child: TextButton(
         style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero)),
         onPressed: () {
@@ -270,8 +275,8 @@ class SingleSwiper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 750.w,
-      height: 1000.w,
+      width: 750.r,
+      height: 1000.r,
       child: Swiper(
         itemCount: swiperUrl.length,
         autoplay: true,
@@ -281,8 +286,8 @@ class SingleSwiper extends StatelessWidget {
             children: [
               Image.network(swiperUrl[index], fit: BoxFit.fitWidth),
               Container(
-                width: 750.w,
-                height: 1000.w,
+                width: 750.r,
+                height: 1000.r,
                 decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -306,7 +311,7 @@ class SinglePanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 900.w, left: 15.w, right: 15.w),
+      margin: EdgeInsets.only(top: 900.r, left: 15.r, right: 15.r),
       decoration: BoxDecoration(
           border: Border.all(width: 1, color: const Color(0xFF353535)),
           borderRadius: const BorderRadius.vertical(top: const Radius.circular(5)),
@@ -344,7 +349,7 @@ class _SingleInfoState extends State<SingleInfo> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(36.w),
+      padding: EdgeInsets.all(36.r),
       child: Column(
         children: [
           const SingleInfoMain(artworkName: "赤子", price: 598),
@@ -361,10 +366,10 @@ class _SingleInfoState extends State<SingleInfo> {
             "数字藏品为虚拟数字商品，而非实物，仅限实名认证中国大陆用户购买。"
                 "数字藏品的版权由发行方或原创者拥有，除另行取得版权拥有者书面同意外，用户不得将数字藏品用于任何商业用途。"
                 "本商品一经售出，不支持退换。请勿对数字藏品进行炒作、场外交易、欺诈，或以任何其他非法方式进行使用。",
-            style: TextStyle(fontSize: 21.w, color: const Color(0xFF616161)),
+            style: TextStyle(fontSize: 21.r, color: const Color(0xFF616161)),
           ),
           //Bottom=============================
-          SizedBox(height: 180.w, width: 720.w)
+          SizedBox(height: 180.r, width: 720.r)
         ],
       ),
     );
@@ -379,7 +384,7 @@ class SingleHorizontalLine extends StatelessWidget {
     return Container(
       height: 1,
       color: const Color(0xFF353535),
-      margin: EdgeInsets.symmetric(vertical: 36.w),
+      margin: EdgeInsets.symmetric(vertical: 36.r),
     );
   }
 }
@@ -397,14 +402,14 @@ class SingleInfoMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 9.w),
+      padding: EdgeInsets.symmetric(horizontal: 9.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              SizedBox(width: 8.w),
-              Text(artworkName, style: TextStyle(fontSize: 40.w, height: 1.2))
+              SizedBox(width: 8.r),
+              Text(artworkName, style: TextStyle(fontSize: 40.r, height: 1.2))
             ],
           ),
           Row(
@@ -414,8 +419,8 @@ class SingleInfoMain extends StatelessWidget {
               Text.rich(
                   TextSpan(
                       children: [
-                        TextSpan(text: "￥", style: TextStyle(fontSize: 32.w)),
-                        TextSpan(text: price.toString(), style: TextStyle(fontSize: 40.w, fontWeight: FontWeight.bold))
+                        TextSpan(text: "￥", style: TextStyle(fontSize: 32.r)),
+                        TextSpan(text: price.toString(), style: TextStyle(fontSize: 40.r, fontWeight: FontWeight.bold))
                       ]
                   )
               ),
@@ -439,8 +444,8 @@ class SingleInfoIntro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 9.w),
-      child: Text(introduction, style: TextStyle(fontSize: 24.w)),
+      padding: EdgeInsets.symmetric(horizontal: 9.r),
+      child: Text(introduction, style: TextStyle(fontSize: 24.r)),
     );
   }
 }
@@ -464,25 +469,25 @@ class SingleInfoNumber extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          width: 288.w,
+          width: 288.r,
           child: Column(
             children: [
-              Text("作品数量", style: TextStyle(fontSize: 21.w, color: const Color(0xFF9E9E9E))),
-              Text(avlAmount.toString()+"/"+totalAmount.toString(), style: TextStyle(fontSize: 32.w))
+              Text("作品数量", style: TextStyle(fontSize: 21.r, color: const Color(0xFF9E9E9E))),
+              Text(avlAmount.toString()+"/"+totalAmount.toString(), style: TextStyle(fontSize: 32.r))
             ],
           ),
         ),
         Container(
-            margin: EdgeInsets.symmetric(horizontal: 36.w),
+            margin: EdgeInsets.symmetric(horizontal: 36.r),
             width: 1,
-            height: 96.w,
+            height: 96.r,
             color: const Color(0xFF353535)),
         SizedBox(
-          width: 280.w,
+          width: 280.r,
           child: Column(
             children: [
-              Text("作品编号", style: TextStyle(fontSize: 21.w, color: const Color(0xFF9E9E9E))),
-              Text(artworkNumber, style: TextStyle(fontSize: 32.w))
+              Text("作品编号", style: TextStyle(fontSize: 21.r, color: const Color(0xFF9E9E9E))),
+              Text(artworkNumber, style: TextStyle(fontSize: 32.r))
             ],
           ),
         )
@@ -508,7 +513,7 @@ class SingleInfoCreator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 9.w),
+      padding: EdgeInsets.symmetric(horizontal: 9.r),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -516,9 +521,9 @@ class SingleInfoCreator extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                margin: EdgeInsets.only(right: 36.w),
-                width: 64.w,
-                height: 64.w,
+                margin: EdgeInsets.only(right: 36.r),
+                width: 64.r,
+                height: 64.r,
                 decoration: BoxDecoration(
                     border: Border.all(width: 1, color: const Color(0xFF353535))
                 ),
@@ -528,8 +533,8 @@ class SingleInfoCreator extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("艺术家", style: TextStyle(fontSize: 21.w, color: const Color(0xFF9E9E9E))),
-                  Text("JICHU", style: TextStyle(fontSize: 27.w))
+                  Text("艺术家", style: TextStyle(fontSize: 21.r, color: const Color(0xFF9E9E9E))),
+                  Text("JICHU", style: TextStyle(fontSize: 27.r))
                 ],
               )
             ],
@@ -541,14 +546,14 @@ class SingleInfoCreator extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text("所属系列", style: TextStyle(fontSize: 21.w, color: const Color(0xFF9E9E9E)), textDirection: TextDirection.rtl),
-                  Text("桃花源", style: TextStyle(fontSize: 27.w), textDirection: TextDirection.rtl)
+                  Text("所属系列", style: TextStyle(fontSize: 21.r, color: const Color(0xFF9E9E9E)), textDirection: TextDirection.rtl),
+                  Text("桃花源", style: TextStyle(fontSize: 27.r), textDirection: TextDirection.rtl)
                 ],
               ),
               Container(
-                margin: EdgeInsets.only(left: 36.w),
-                width: 64.w,
-                height: 64.w,
+                margin: EdgeInsets.only(left: 36.r),
+                width: 64.r,
+                height: 64.r,
                 decoration: BoxDecoration(
                     border: Border.all(width: 1, color: const Color(0xFF353535))
                 ),
@@ -574,8 +579,8 @@ class SingleInfoDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> displayImages = [
-      Text("艺术品展示", style: TextStyle(fontSize: 32.w, fontWeight: FontWeight.bold)),
-      SizedBox(height: 24.w)
+      Text("艺术品展示", style: TextStyle(fontSize: 32.r, fontWeight: FontWeight.bold)),
+      SizedBox(height: 24.r)
     ];
     for (String url in imageUrl) {
       displayImages.add(FadeInImage.assetNetwork(
@@ -586,7 +591,7 @@ class SingleInfoDisplay extends StatelessWidget {
     }
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 9.w),
+      margin: EdgeInsets.symmetric(horizontal: 9.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: displayImages,
@@ -605,8 +610,8 @@ class SingleInfoList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(top: 36.w, left: 9.w),
-          child: Text("艺术品信息", style: TextStyle(fontSize: 32.w, fontWeight: FontWeight.bold)),
+          margin: EdgeInsets.only(top: 36.r, left: 9.r),
+          child: Text("艺术品信息", style: TextStyle(fontSize: 32.r, fontWeight: FontWeight.bold)),
         ),
         const SingleListDivide(),
         const SingleListItem(listKey: "艺术品名称", listValue: "赤子"),
@@ -644,17 +649,17 @@ class SingleListItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.only(left: 9.w),
-              width: 150.w,
-              child: Text(listKey, style: TextStyle(fontSize: 24.w)),
+              padding: EdgeInsets.only(left: 9.r),
+              width: 150.r,
+              child: Text(listKey, style: TextStyle(fontSize: 24.r)),
             ),
             Container(
-                margin: EdgeInsets.only(right: 20.w),
+                margin: EdgeInsets.only(right: 20.r),
                 width: 1,
-                height: 32.w,
+                height: 32.r,
                 color: const Color(0xFF353535)
             ),
-            Text(listValue, style: TextStyle(fontSize: 24.w))
+            Text(listValue, style: TextStyle(fontSize: 24.r))
           ],
         ),
         const SingleListDivide()
@@ -670,7 +675,7 @@ class SingleListDivide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 24.w),
+      margin: EdgeInsets.symmetric(vertical: 24.r),
       height: 1,
       color: const Color(0xFF353535),
     );
@@ -679,11 +684,11 @@ class SingleListDivide extends StatelessWidget {
 
 
 /// BELOW is the Footer Widget available for Kaiwu detail pages
-class KaiwuFooter extends StatelessWidget {
+class KaiwuPageFooter extends StatelessWidget {
   final Image buttonLeft;
   final Image buttonRight;
 
-  const KaiwuFooter({
+  const KaiwuPageFooter({
     Key? key,
     required this.buttonLeft,
     required this.buttonRight
@@ -694,16 +699,16 @@ class KaiwuFooter extends StatelessWidget {
     return Positioned(
       bottom: 0,
       child: SizedBox(
-        width: 750.w,
-        height: 180.w,
+        width: 750.r,
+        height: 180.r,
         child: ClipRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
             child: Stack(
               children: [
-                Image.asset("asset/images/single_footer.png", width: 750.w, height: 180.w),
+                Image.asset("asset/images/single_footer.png", width: 750.r, height: 180.r),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.w),
+                  padding: EdgeInsets.symmetric(horizontal: 30.r, vertical: 30.r),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -735,11 +740,11 @@ class KaiwuFooterButton extends StatelessWidget {
         print("click")
       },
       child: SizedBox(
-        width: 345.w,
-        height: 90.w,
+        width: 345.r,
+        height: 90.r,
         child: OverflowBox(
-          maxWidth: 360.w,
-          maxHeight: 90.w,
+          maxWidth: 360.r,
+          maxHeight: 90.r,
           child: button,
         ),
       ),
@@ -747,3 +752,35 @@ class KaiwuFooterButton extends StatelessWidget {
   }
 }
 
+
+/// BELOW is the header Buttons
+class KaiwuHeaderButton extends StatelessWidget {
+  const KaiwuHeaderButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 24.r),
+      child: Column(
+        children: [
+          SizedBox(height: MediaQuery.of(context).padding.top),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(CupertinoIcons.back, color: const Color(0xFFFFFFFF), size: 48.r,)
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(CupertinoIcons.ellipsis_circle, color: const Color(0xFFFFFFFF), size: 48.r,)
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}

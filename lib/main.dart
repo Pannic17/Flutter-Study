@@ -1,10 +1,17 @@
 // ignore_for_file: avoid_print, prefer_const_constructors, prefer_final_fields
 
+import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kaiwu_flutter_test_2/singleDetail.dart';
+
+import 'list.dart';
 
 void main() async {
   if (Platform.isAndroid) {
@@ -63,38 +70,47 @@ class _HomePageState extends State<HomePage> {
           FocusScope.of(context).unfocus();
           setState(() {});
         },
-        child: Container(
-          color: Color(0xFF1d1d1d),
-          child: Column(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(0),
+          child: Stack(
             children: [
-              SizedBox(height: MediaQuery.of(context).padding.top),
-              KaiwuBar(
-                display: _display,
-                filter: _filter,
-                sorter: _sorter,
-                onSwitch: (display) {
-                  FocusScope.of(context).unfocus();
-                  setState(() {
-                    _filter = false;
-                    _sorter = false;
-                    _display = display;
-                  });
-                },
-                onTapFilter: () {
-                  setState(() {
-                    _filter = !_filter;
-                    _sorter = false;
-                  });
-                },
-                onTapSorter: () {
-                  setState(() {
-                    _sorter = !_sorter;
-                    _filter = false;
-                  });
-                }
-              ),
+              KaiwuSingleList(),
+              Positioned(
+                child: Container(
+                  color: Color(0xFF1d1d1d),
+                  child: Column(
+                    children: [
+                      SizedBox(height: MediaQuery.of(context).padding.top),
+                      KaiwuBar(
+                          display: _display,
+                          filter: _filter,
+                          sorter: _sorter,
+                          onSwitch: (display) {
+                            FocusScope.of(context).unfocus();
+                            setState(() {
+                              _filter = false;
+                              _sorter = false;
+                              _display = display;
+                            });
+                          },
+                          onTapFilter: () {
+                            setState(() {
+                              _filter = !_filter;
+                              _sorter = false;
+                            });
+                          },
+                          onTapSorter: () {
+                            setState(() {
+                              _sorter = !_sorter;
+                              _filter = false;
+                            });
+                          }
+                      ),
+                    ],
+                  )
+              ),)
             ],
-          )
+          ),
         ),
       ),
     );
@@ -223,7 +239,7 @@ class KaiwuBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 36.r),
+      padding: EdgeInsets.symmetric(horizontal: 24.r),
       decoration: const BoxDecoration(color: Color(0xDD1d1d1d)),
       child: Column(
         children: [
@@ -245,6 +261,28 @@ class KaiwuBar extends StatelessWidget {
             onFiltSale: (sales) => print(sales),
             onSort: (order) => print(order)
           ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return SingleDetailPage();
+                }),
+              );
+            },
+            child: Text("Single Detail", style: TextStyle(color: Color(0xFFFFFFFF)))
+          ),
+          TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return SingleDetailPage();
+                  }),
+                );
+              },
+              child: Text("Single Detail", style: TextStyle(color: Color(0xFFFFFFFF)))
+          )
         ],
       ),
     );
@@ -854,6 +892,7 @@ class KaiwuSwitch extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(12.r),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           RawMaterialButton(
@@ -878,6 +917,34 @@ class KaiwuSwitch extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class KaiwuSwitchRow extends StatelessWidget {
+  final bool switchDisplay;
+  final ValueChanged<bool> onSwitch;
+  const KaiwuSwitchRow({
+    Key? key,
+    required this.switchDisplay,
+    required this.onSwitch
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(CupertinoIcons.back, color: const Color(0xFFFFFFFF), size: 48.r,)
+        ),
+        KaiwuSwitch(switchDisplay: switchDisplay, onSwitch: onSwitch),
+        IconButton(
+          onPressed: () {},
+          icon: Icon(CupertinoIcons.ellipsis_circle, color: const Color(0xFFFFFFFF), size: 48.r,)
+        )
+      ],
     );
   }
 }
@@ -915,6 +982,7 @@ class KaiwuBarRow extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 12.r, horizontal: 9.r),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           KaiwuSearchBar(
             search: onSearch, 
@@ -929,3 +997,80 @@ class KaiwuBarRow extends StatelessWidget {
     );
   }
 }
+
+// Home Footer
+class KaiwuHomeFooter extends StatefulWidget {
+  const KaiwuHomeFooter({Key? key}) : super(key: key);
+
+  @override
+  State<KaiwuHomeFooter> createState() => _KaiwuHomeFooterState();
+}
+
+class _KaiwuHomeFooterState extends State<KaiwuHomeFooter> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 100,
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          child: Stack(
+            children: [
+              Image.asset("asset/images/footer_back.png", width: 750.r, height: 210.r)
+            ],
+          ),
+        )
+      ),
+    );
+  }
+}
+
+
+
+///ShaderMask(
+//         child: ClipRect(
+//           child: BackdropFilter(
+//             filter: ui.ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+//             child: Stack(
+//               children: [
+//                 Image.asset("asset/images/footer_back.png", width: 750.r, height: 210.r)
+//               ],
+//             ),
+//           )
+//         ),
+//         shaderCallback: (rect) {
+//           return LinearGradient(
+//             colors: [
+//               Colors.green,
+//               Colors.blue,
+//               Colors.red
+//             ],
+//             stops: [0, 0.5, 1]
+//           ).createShader(rect);
+//           // return ImageShader(, TileMode.clamp, TileMode.clamp, Matrix4.identity().storage);
+//         },
+//         blendMode: BlendMode.srcIn,
+//       )
+
+// Container(
+//         width: 750.r,
+//         height: 210.r,
+//         decoration: BoxDecoration(
+//           image: const DecorationImage(
+//             image: AssetImage("asset/images/footer_mask.png"),
+//             fit: BoxFit.cover,
+//
+//           ),
+//         ),
+//         child: ClipRect(
+//           child: BackdropFilter(
+//             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+//             child: Stack(
+//               children: [
+//                 Image.asset("asset/images/footer_back.png", width: 750.r, height: 210.r)
+//               ],
+//             ),
+//           ),
+//         ),
+//       )

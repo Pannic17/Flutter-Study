@@ -364,3 +364,56 @@ class _KaiwuBarTestState extends State<KaiwuBarTest> {
     );
   }
 }
+
+class KaiwuFooterMask extends StatefulWidget {
+  final Widget child;
+
+  const KaiwuFooterMask({
+    Key? key,
+    required this.child
+  }) : super(key: key);
+
+  @override
+  State<KaiwuFooterMask> createState() => _KaiwuFooterMaskState();
+}
+
+class _KaiwuFooterMaskState extends State<KaiwuFooterMask> {
+  late Future<Shader> _shader;
+
+  @override
+  void initState() {
+    super.initState();
+    _shader = _loadShader(context);
+  }
+
+  Future<Shader> _loadShader(BuildContext context) async {
+    final completer = Completer<ImageInfo>();
+
+    // use the ResizeImage provider to resolve the image in the required size
+    ResizeImage(AssetImage("asset/images/footer_mask.png"), width: MediaQuery.of(context).size.width.toInt(), height: 210.r.toInt())
+        .resolve(ImageConfiguration(size: Size(750.r, 210.r)))
+        .addListener(ImageStreamListener((info, _) => completer.complete(info)));
+
+    final info = await completer.future;
+    return ImageShader(
+      info.image,
+      TileMode.clamp,
+      TileMode.clamp,
+      Float64List.fromList(Matrix4.identity().storage),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _shader,
+      builder: (_, AsyncSnapshot<Shader> snapshot) {
+        return ShaderMask(
+          blendMode: BlendMode.dstATop,
+          shaderCallback: (bounds) => snapshot.data,
+          child: widget.child,
+        );
+      },
+    );
+  }
+}

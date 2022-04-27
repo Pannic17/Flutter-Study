@@ -47,32 +47,43 @@ class homePage extends StatelessWidget {
         padding: EdgeInsets.symmetric(
             horizontal: 27.r
         ),
-        child: homeContent(),
+        child: KaiwuSingleList(),
       ),
     );
   }
 }
 
-class homeContent extends StatelessWidget {
-  const homeContent({Key? key}) : super(key: key);
+class KaiwuSingleList extends StatelessWidget {
+  const KaiwuSingleList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GridView(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.56,
-          mainAxisSpacing: 24.r,
-          crossAxisSpacing: 24.r
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 24.r),
+      child: GridView(
+        controller: ScrollController(
+            keepScrollOffset: false
+        ),
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.56,
+            mainAxisSpacing: 24.r,
+            crossAxisSpacing: 24.r
+        ),
+        children: <Widget>[
+          homeItem("https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s1.png",
+              name: "赤子", number: "KW00101", price: 499, avlAmount: 1, totalAmount: 9),
+          homeItem("https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s1.png",
+              name: "赤子", number: "KW00101", price: 499, avlAmount: 1, totalAmount: 9),
+          homeItem("https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s1.png",
+              name: "赤子", number: "KW00101", price: 499, avlAmount: 1, totalAmount: 9),
+          homeItem("https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s1.png",
+              name: "赤子", number: "KW00101", price: 499, avlAmount: 1, totalAmount: 9),
+          homeItem("https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s1.png",
+              name: "赤子", number: "KW00101", price: 499, avlAmount: 1, totalAmount: 9),
+        ],
       ),
-      children: <Widget>[
-        homeItem("https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s1.png",
-            name: "赤子", number: "KW00101", price: 499, avlAmount: 1, totalAmount: 9),
-        homeItem("https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s1.png",
-            name: "赤子", number: "KW00101", price: 499, avlAmount: 1, totalAmount: 9),
-        homeItem("https://test-1308399957.cos.ap-shanghai.myqcloud.com/images/KW00101000/s1.png",
-            name: "赤子", number: "KW00101", price: 499, avlAmount: 1, totalAmount: 9),
-      ],
     );
   }
 }
@@ -98,7 +109,7 @@ class homeItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(9.f),
+      padding: EdgeInsets.all(9.r),
       decoration: BoxDecoration(
           color: Color(0xFF292929),
           border: Border.all(width: 1, color: Color(0xFF353535)),

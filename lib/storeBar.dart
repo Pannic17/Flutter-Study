@@ -223,7 +223,7 @@ class KaiwuBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 36.r),
+      margin: EdgeInsets.symmetric(horizontal: 30.r),
       decoration: const BoxDecoration(color: Color(0xDD1d1d1d)),
       child: Column(
         children: [
@@ -398,21 +398,21 @@ class _KaiwuFilterMenuState extends State<KaiwuFilterMenu> {
       child: Column(
         children: [
           KaiwuFilterMulti(
-              tags: widget.typeList,
-              onSelect: (type) => { widget.onFiltType(type) },
-              selected: widget.typeSelected,
-              height: 48.r,
-              margin: EdgeInsets.all(12.r),
-              padding: EdgeInsets.symmetric(horizontal: 12.r)
+            tags: widget.typeList,
+            onSelect: (type) => { widget.onFiltType(type) },
+            selected: widget.typeSelected,
+            height: 48.r,
+            margin: EdgeInsets.all(12.r),
+            padding: EdgeInsets.symmetric(horizontal: 12.r)
           ),
           KaiwuFilterRadio(
-              tags: widget.saleList,
-              onSelect: (sale) => { widget.onFiltSale(sale) },
-              selected: widget.saleSelected,
-              height: 48.r,
-              specific: true,
-              margin: EdgeInsets.all(12.r),
-              padding: EdgeInsets.symmetric(horizontal: 12.r)
+            tags: widget.saleList,
+            onSelect: (sale) => { widget.onFiltSale(sale) },
+            selected: widget.saleSelected,
+            height: 48.r,
+            specific: true,
+            margin: EdgeInsets.all(12.r),
+            padding: EdgeInsets.symmetric(horizontal: 12.r)
           )
         ],
       ),
@@ -462,27 +462,27 @@ class _KaiwuFilterMultiState extends State<KaiwuFilterMulti> {
   Widget build(BuildContext context) {
     _tagList = [];
     _tagList.add(
-        KaiwuFilterItem(
-            tag: "全部",
-            index: 0,
-            selected: _selectStatus[0],
-            height: widget.height,
-            margin: widget.margin,
-            padding: widget.padding,
-            onSelect: (selected) {
-              if (_selectedList.isNotEmpty && selected["selected"]) {
-                for (int index in _selectedList) {
-                  _selectStatus[index] = false;
-                }
-                _selectedList = [];
-                _selectStatus[0] = true;
-              }
-              widget.onSelect(_selectedList);
-              setState(() {
-                print("0#$_selectStatus");
-              });
+      KaiwuFilterItem(
+        tag: "全部",
+        index: 0,
+        selected: _selectStatus[0],
+        height: widget.height,
+        margin: widget.margin,
+        padding: widget.padding,
+        onSelect: (selected) {
+          if (_selectedList.isNotEmpty && selected["selected"]) {
+            for (int index in _selectedList) {
+              _selectStatus[index] = false;
             }
-        )
+            _selectedList = [];
+            _selectStatus[0] = true;
+          }
+          widget.onSelect(_selectedList);
+          setState(() {
+            print("0#$_selectStatus");
+          });
+        }
+      )
     );
     int index = 0;
     for (String tag in widget.tags) {
@@ -602,23 +602,23 @@ class _KaiwuFilterRadioState extends State<KaiwuFilterRadio> {
     for (String tag in widget.tags) {
       count += 1;
       _tagList.add(KaiwuFilterItem(
-          tag: tag,
-          index: count,
-          selected: _selectStatus[count],
-          height: widget.height,
-          margin: widget.margin,
-          padding: widget.padding,
-          onSelect: (selectMap) {
-            for (int index = 0; index < _selectStatus.length; index++) {
-              _selectStatus[index] = false;
-            }
-            _selected = widget.specific ? _selectEnum[selectMap["index"]] : selectMap["index"];
-            _selectStatus[selectMap["index"]] = true;
-            widget.onSelect(_selected);
-            setState(() {
-              print("${selectMap["index"]}#$_selectStatus");
-            });
+        tag: tag,
+        index: count,
+        selected: _selectStatus[count],
+        height: widget.height,
+        margin: widget.margin,
+        padding: widget.padding,
+        onSelect: (selectMap) {
+          for (int index = 0; index < _selectStatus.length; index++) {
+            _selectStatus[index] = false;
           }
+          _selected = widget.specific ? _selectEnum[selectMap["index"]] : selectMap["index"];
+          _selectStatus[selectMap["index"]] = true;
+          widget.onSelect(_selected);
+          setState(() {
+            print("${selectMap["index"]}#$_selectStatus");
+          });
+        }
       ));
     }
 
